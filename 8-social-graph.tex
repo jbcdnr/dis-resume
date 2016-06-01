@@ -1,0 +1,19 @@
+
+\section{Social Graph}
+
+In social graph, we often want to extract communities, use clustering
+
+
+Strong and weak communities, for a given vertex $i$ we define
+
+\begin{itemize}
+  \item the internal degree $k_i^{int}$ the number of edges from $i$ going to another vertex of the community
+  \item the external degree $k_i^{ext}$ the number of edges from $i$ going to a vertex outside of the community
+\end{itemize}
+
+$k_i^{int}$ should be high and $k_i^{ext}$ should be low, otherwise change the community. We should have
+
+\[
+  \sum_{i\in C} k_i^{int}(C) > \sum_{i\in C} k_i^{out}(C)
+\]
+
