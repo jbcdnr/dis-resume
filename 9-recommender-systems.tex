@@ -1,0 +1,55 @@
+
+\section{Recommender systems}
+
+\paragraph{Definition.} Given a user and a set of items, a recommender system is a function that helps to match users with items by ranking the items in order of decreased relevance.
+
+We can discern two paradigms for recommender systems: 
+\begin{itemize}
+  \item \textbf{Collaborative:} tell me what other people like
+  \item \textbf{Content-based:} show me more of what I liked from my past ratings and the data of these objects
+\end{itemize}
+
+\subsection{Collaborative filtering}
+
+Widely used by large e-commerce sites, applicable in many domains. Users give ratings to items, we assume that users with similar tastes in the past will have similar tastes in the future.
+
+\paragraph{Problems.} Cold start, scalability, more users than items (huge neighborhood), data dispersion (hard to find neighborhood). Possible solution: compute predictions offline and use learned model online + update model regularly.
+
+\paragraph{Technique.} Given a user $U$ and an item $I$ not rated by $U$, estimate the rating $r_U(I)$
+
+\begin{enumerate}
+  \item Find a set of users $N_u$ who liked the same items as $U$ in the past and who have rated $I$
+  \item Aggregate the ratings of $I$ provided by $N_U$ to get $r_U(I)$
+  \item Compute the ratings for all the items not rated by U and recommend the best-rated ones
+\end{enumerate}
+
+\subsubsection{Similarity metric}
+We need a metric to compute similarity between users and find the closest neighborhood of a user. 
+
+\paragraph{Pearson correlation coefficient} as similarity measure. Given two users $x$ and $y$, a set of items $I$ rated by both $x$ and $y$ ($|I| = N$), and $r_x(i)$ the rating of $x$ for $i\in I$, the Pearson correlation coefficient is given by
+\[
+  \text{sim}_{corr}(x,y) = \frac {\sum_{i=1}^N (r_x(i)-\bar r_x)(r_y(i) - \bar r_y) } { \sqrt {\sum_{i=1}^N (r_x(i) - \bar r_x)^2} \sqrt {\sum_{i=1}^N (r_y(i) - \bar r_y)^2}}
+\]
+We have $-1 \leq \text{sim}(x,y) \leq 1$
+
+
+\paragraph{Cosine similarity.} It consider each user as a $N$ length vector and compute the angle between $\mathbf{x}$ and $\mathbf{y}$. If angle is 0 the two ratings are very close (sim returns 1), if the vetors are orthogonal it return 0.
+
+\[
+  \text{sim}_{cos}(x,y) = \frac {\sum_{i=1}^N r_x(i)r_y(i)}{\sqrt{\sum_{i=1}^N r_x(i)^2} \sqrt{\sum_{i=1}^N r_y(i)^2}}
+\]
+
+One drawback of Pearson correlation coefficient is that it is not computable if the variance of one of the user ratings is 0 (e.g. a user with ratings 1 1 1 1). However, in general, the correlation coefficient works well in usual domains, compared to the cosine similarity. The reason is that the cosine similarity does not consider the magnitude of the ratings but only the angle between the vectors.
+
+\subsubsection{Aggregate the ratings}
+
+The following aggregation function is a weighted average using the similarity as a weight
+
+\[
+  r_x(a) = \bar r_x + \frac {\sum_{y \in N_x} \text{sim}(x,y)(r_y(a) - \bar r_y)} {\sum_{y \in N_x} |\text{sim}(x,y)|}
+\]
+
+\subsection{Item-baser collaborative filtering}
+
+
+
