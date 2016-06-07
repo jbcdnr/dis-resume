@@ -20,7 +20,7 @@ Widely used by large e-commerce sites, applicable in many domains. Users give ra
 \begin{enumerate}
   \item Find a set of users $N_u$ who liked the same items as $U$ in the past and who have rated $I$
   \item Aggregate the ratings of $I$ provided by $N_U$ to get $r_U(I)$
-  \item Compute the ratings for all the items not rated by U and recommend the best-rated ones
+  \item Compute the ratings for all the items not rated by $U$ and recommend the best-rated ones 
 \end{enumerate}
 
 \subsubsection{Similarity metric}
@@ -49,7 +49,57 @@ The following aggregation function is a weighted average using the similarity as
   r_x(a) = \bar r_x + \frac {\sum_{y \in N_x} \text{sim}(x,y)(r_y(a) - \bar r_y)} {\sum_{y \in N_x} |\text{sim}(x,y)|}
 \]
 
-\subsection{Item-baser collaborative filtering}
+\subsection{Item-based collaborative filtering}
 
+We use the similarity between items (and not users) to make predictions. Given a user $U$ and an item $I$ not rated by $U$, estimate the rating $r_U(I)$ by
 
+\begin{enumerate}
+  \item Find a set of items $N_I$ who are similar to $I$ and that have been rated by $U$
+  \item Aggregate the ratings of the items in $N_I$ and use the aggregation as prediction of $r_U(I)$
+\end{enumerate}
+
+Be careful that in this technique the similarity between objects is computed only with regard to the rating given by users (two objects are similar if they have been graded the same way by the users). We don't use the content/description of the object (yet).
+
+\paragraph{Aggregate the ratings.}
+
+\[
+  r_x(a) = \frac{\sum_{b\in N_a} \text{sim}(a,b) r_x(b)}{\sum_{b\in N_a}}
+\]
+
+There is still the scalability problem but we can calculate all the pair-wise item similarities in advance. Items similarities are more stable and we only need to consider the neighborhood (small) at runtime.
+
+\subsection{Content-based recommendation}
+
+\begin{enumerate}
+  \item Find the items that are similar to the past rated items
+  \item Aggregate the ratings of the most similar items
+\end{enumerate}
+
+The content of a item is often noisy if input by the manufacturer and hard to compare between the items, a formalism is needed to compute the similarity.
+
+\paragraph{TF-IDF weights} For textual description, we can use this technique to describe a text by the set of terms that appear in their description, with their associated weight. Given $N$ the number of items and $n(t)$ the number of items having word $t$ in their description
+
+\[
+  w(t,a) = \text{tf}(t,a) \cdot \text{idf}(t) = \frac{\text{freq}(t,a)}{\max_{s\in T} \text{freq}(s,a)}\log\pfrac N {n(t)}
+\]
+
+To compute the TF-IDF measure, all the steps typical of information retrieval (removing stopwords, stemming, only top M terms etc.) are necessary.
+
+\paragraph{Cosine similarity.} Given $1 \dots T$ the terms appearing in all the items,
+
+\[
+  \text{sim}_{cos}(a,b) = \frac {\sum_{t=1}^T w(t,a)\cdot w(t,b)}{\sqrt{\sum_{t=1}^T w(t,a)^2}\sqrt{\sum_{t=1}^T w(t,b)^2}}
+\]
+
+\paragraph{Aggregation.} For a given item $a$ not rated yet, we have neighbor items $N_a$ rated by the user we make a prediction by the following formula
+
+\[
+  r_x(a) = \frac {\sum_{b\in N_a} \text{sim}(a,b) \cdot r_x(b)}{\sum_{b\in N_a} | \text{sim}(a,b)|}
+\]
+
+\paragraph{Problems.} Cold start, content can be limited or impossible to extract (multimedia), tends to recommend “more of the same”. Advantage: TF-IDF scores can be computed offline.
+
+\textbf{TODO Matrix factorization reference to later week (last?)}
+
+\subsection{Netflix Prize}
 
