@@ -76,6 +76,7 @@ Repeat for each node, but let take $A$ w.l.o.g. (see \cref{fig:betweenness})
   \item BFS from node $A$, all nodes are layered
   \item For each node $i$, count the number of shortest paths arriving to $i$. Recursively sum up the count of the parents (assigning 1 to node $A$).
   \item Assign edge values bottom up, each node has value $1 + \sum ($child edges weight$)$, to distribute proportionally to its parents according to their weight
+  \item Repeat for each node, sum the weights and divide by two (paths discovered twice - from each end).
 \end{itemize}
 
 
@@ -85,6 +86,10 @@ Repeat for each node, but let take $A$ w.l.o.g. (see \cref{fig:betweenness})
   \caption{Betweenness computation - BFS, top down node weighting, bottom up edge values}
   \label{fig:betweenness}
 \end{figure}
+
+\subsubsection{$k$-medoids for cluster extraction}
+
+We can use $k$-medoids with arbitrary chosen starting centers and a given distance function (weight on the edges for instance). Should start with multiple starting point to avoid being stuck in bad local optimal.
 
 \subsection{Random graphs}
 
