@@ -103,3 +103,25 @@ To compute the TF-IDF measure, all the steps typical of information retrieval (r
 
 \subsection{Netflix Prize}
 
+What we need to know:
+
+\begin{itemize}
+  \item Input of the challenge: utility matrix, try to guess the grey part (see \cref{fig:netflix_matrix})
+  \item Winners: BellKor and Ensemble, code never used in production
+  \item Ensemble is a mixing of models of different former teams
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\linewidth]{figures/netflix_matrix.png}
+  \caption{Netflix utility matrix}
+  \label{fig:netflix_matrix}
+\end{figure}
+
+\paragraph{Bellkor solution.} Multi-scale modeling of the data
+\begin{itemize}
+  \item Global: mean rating overall users plus average difference of the user, to have a baseline
+  \item Factorization: address regional effect
+  \item Local neighborhood: related movies
+  \item An idea is to embed the movies in a multi dimension vector space: Latent Factor Models (e.g. SVD)
+\end{itemize}
