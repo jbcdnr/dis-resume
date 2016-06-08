@@ -1,10 +1,12 @@
-\documentclass[11pt,letterpaper]{article}
+\documentclass[11pt,twocolumn]{article}
 
+\usepackage[a4paper, margin={.5in, .5in}]{geometry}
 \usepackage{latexsym,graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{amsthm}
 \usepackage{enumerate}
 \usepackage{graphicx}
+\usepackage{cleveref}
 \usepackage{algorithmic}
 \usepackage{algorithm}
 
@@ -76,10 +78,24 @@
 
 \begin{document}
 
+\include{1-overview}
+
+
 
 \include{3-4-graph-databases}
 
+% Sebastien S
+\include{6-clustering-classification}
+
+% Sebastien S
+\include{7-classification-pipeline}
+
 \include{8-social-graph}
 
+<<<<<<< HEAD
 \include{11-inverted-files}
+=======
+\include{9-recommender-systems}
+
+>>>>>>> 3ddfc7c78a0fff788b4d43177b46e00353b6a5d9
 \end{document}

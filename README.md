@@ -5,9 +5,11 @@ Week assignment (lectures and exercices)
 People | Week
 --- | ---
 Baptiste | 1-2
-Prisca | 3-4-5
+Prisca | 3-4
+Loïc | 5 (or more...)
 Seb | 6-7
-JB | 8-9-10
+JB | 8-9
+Christophe | 10
 Alexis | 11-12
 
 - Others can help or take a full week.

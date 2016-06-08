@@ -1,0 +1,110 @@
+\section{Clustering and classifications}
+
+\subsection{Clustering}
+\textbf{The main idea:} Given a dataset of objects described by attributes, build a model that assigns objects to a class. 
+
+\begin{itemize}
+	\item \textbf{produces classes} which are not know in advance (called clusters)
+	\item objects that belong to the same cluster are similar
+	\item said \textbf{unsupervised} since objects do not have class information 
+	\item serves for exploratory data analysis with little or \textbf{no prior knowledge}
+\end{itemize}
+
+\subsubsection*{Issues with clustering}
+
+\begin{itemize}
+	\item high-dimensional data is too sparsely distributed 
+	\\ $\rightarrow$ project data into a lower dimensional space
+	\item many methods can detect only very simple geometrical sphapes
+\end{itemize}
+
+\subsubsection*{Partitioning methods}
+Given dataset $D$ of $n$ objects, partition it into k sets $S_1, ..., S_k$. The goal of this method is to minimise the cost function $J$. 
+Optimal algorithm isn't practical. There exists different heuristic algorithms:
+
+\begin{itemize}
+	\item \textbf{K-means}: cluster is represented by the point whose mean distance with the objects in the cluster is minimal
+
+	\item \textbf{K-medoids}: cluster is represented by the object whose mean distance with the objects in the cluster is minimal
+
+	\item \textbf{K-medians}: cluster is represented by the point whose median distance with all the objects in the cluster is minimal
+\end{itemize}
+Here is $J$'s formulation for the K-means algorithm:
+\begin{align*}
+	J = \frac{1}{n} \sum_{i = 1}^{k} \sum_{x_j \in S_i} || x_j - \mu_i ||^2 , \quad \mu_i = \frac{1}{|S_i|} \sum_{x_j \in S_i} x_j
+\end{align*}
+
+and the algorithm:
+
+\noindent
+
+\fbox{\begin{minipage}{.9\linewidth]}
+\begin{enumerate}
+	\item randomly init the prototypes $\mu_i$
+	\item assign each object to the nearest prototype
+	\item update prototypes $\rightarrow$ put them in the middle of their cluster
+	\item update objects assignements (again to the nearest prototype)
+	\item if it hasn't converged, then go back to step 3.
+\end{enumerate}
+\end{minipage}}\\
+Some issues with K-mean:
+\begin{itemize}
+	\item often terminates at local optimum
+	\item need to specify the number of cluster in advance
+	\item do not handle outliers
+	\item only has convex shapes
+\end{itemize}
+There exists other methods which do not suffer from these issues:
+\begin{itemize}
+	\item Hierarchical clustering: starts with $n$ clusters and then iteraticely merge them if there are similar.
+
+	\item Density-based clustering: discover clusters of arbitrary shape by checking if the number of objects in the neighnourhood of a given objet is above a certain density threshold
+
+	\item Online incremental clustering: place each new incoming object into an existing cluster or a new one.
+\end{itemize}
+
+
+\subsection{Classification}
+\textbf{The main idea:} Starting with a given classification of data items and their attributes, predict the membership to a specific class of a new data object.
+
+\begin{itemize}
+	\item said \textbf{supervised} since it is based on existing data
+	\item useful in decision problems, where for a given data item a decision is to be made
+	\item the model is a function that return the class label fiven the remaining attributes of an unknown object
+	\item the classes are known
+\end{itemize}
+
+A good model classifies accurately the items in the training set and generalises well for the unknown items in the test set.
+
+\subsubsection*{Decision tree}
+In a decision tree, at each level, one of the existing attributes is used to partition the data set based on the attribute value. In such a tree, leaves represent the calues of the class label.
+
+Generally a decision tree is constructed in a top-down manner by recursively splitting the training set using conditions on the attributes. First, all data objects are assign to the root and, based on selected attributes, objects are partitioned. The recursion stops when all samples belong to the same class or if there is no attributes left. In a second phase, we remove leaves correpsonding to outliers.
+
+The attribute selection is based on the amount of entropy in the set S ar a given branch in the tree, defined by:
+\begin{align*}
+	H(P, N) = - \frac{P}{P + N} \log_2 \frac{P}{P + N} - \frac{N}{P + N} \log_2 \frac{N}{P + N} 
+\end{align*}
+with $P$ and $N$ the number of positive and negative samples respectively. The mount of information needed to classify the data after the split according to attribute $A$ is obtained by calculating $H(p,n)$ for each of the partitions and weightting these values by the probability that a data item belongs to the respective partition.
+
+\begin{align*}
+	H(A) = \sum_{i = 1}^v \frac{P_i + N_i}{P + N} H(P_i, N_i)
+\end{align*}
+with $A$ partitioning $S$ into $S_1, ..., S_v$ and $P_i$, $N_i$ the number of respectivelty positive or negative samples in $S_i$.
+
+The information gained (reduction of uncertainty) by a split is given by
+
+\begin{align*}
+	Gain(A) = H(P, N) - H(A)
+\end{align*}
+
+We then just have to take the attribute that leads to the highest reduction of uncertainty. However, it is important to understand that for a test dataset, a classifier might overspecialize and capture noise and outliers in the data rather than general properties. A first strategy to overcome this problem could be to stop partitioning when some criteria is met like the number of samples assigned to a leaf node
+
+Another idea is to use the principle of \textbf{minimum description length}. In a second phase, using a efficiency measurement of the tree nodes (count the number of mislassifications), we can merge some of the leaves. \textbf{TO EXTEND}\\
+Decision trees issues:
+\begin{itemize}
+	\item extremely sensitive to small perturbations in the data and not incremental. A slight change or some new data available implies that the whole tree must be reconstructed from scratch.
+	\item easily overfits
+\end{itemize}
+
+On the other side, a really good aspect of using trees is that they are really easy to interpret and explain. Also, notice that no data preparation is needed and it automatically select good feature for classification.
