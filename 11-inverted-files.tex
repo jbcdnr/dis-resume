@@ -1,0 +1,10 @@
+\section{Inverted Files}
+In order to speed up search of term occurrences, use indexing $\rightarrow$ \emph{Inverted files} is most widely used mechanism. It is appropriate when the text collection is \emph{semi-static}.
+
+For a term $k$, \textbf{inverted list} $l_k = \langle f_k : d_{i_1}, ..., d_{i_{f_k}} \rangle$,
+
+where $f_k$ is the $n^\circ$ of docs in which $k$ occurs, $d_{i_1}, ..., d_{i_{f_k}}$ is the list of identifiers of docs containing $k$.
+
+\textbf{Inverted file} $IF = \langle i, k_i, l_{k_i}, i = 1,..., m \rangle$,
+
+lexicographically ordered seq of inverted lists
