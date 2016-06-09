@@ -1,0 +1,158 @@
+\newcommand{\specialcell}[2][tl]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\section{Information Retrieval - Vector Space Retrieval}
+
+
+\subsection{Information Retrieval}
+Information retrieval deals with the problem of matching information needs of human user with information provided in information collection. To achieve this, an information retrieval system need to deal with the following tasks:
+\begin{itemize}
+\item feature extraction: e.g. extracting words from text
+\item query formulation: e.g. keyword based query languages
+\item information retrieval model
+\end{itemize}
+\paragraph{Retrieval Model} 
+
+The retrieval model is used to capture the meaning of documents and queries, and determine from that the relevance of documents with respect to queries with the help of a similarity matching function. Intuitively it is clear to the user if a document is relevant or not, but there is no objective measure of it.
+\paragraph{Evaluating information retrieval}
+If we have an objective notion of relevant documents for a query, we can define the performance of our retrieval system as follows.
+If $A$ is the answer set and $R$ the relevant documents:
+\begin{itemize}
+\item \textit{Recall} is the fraction of relevant documents retrieved from the set of total relevant documents collection wide. $Recall = \frac{| A \cap R|}{|R|}$
+\item \textit{Precision} is the fraction of relevant documents retrieved from the total number retrieved. $Precision = \frac{|A\cap R|}{|A|}$
+\end{itemize}
+
+\subsection{Text Retrieval Models}
+
+Most of the information needs and content are expressed in natural language. We will use a strongly simplified model of text called "full text" retrieval approach. This model ignores grammar and meaning of words. This simplification has proven successful. We can then extend this model with other features such as link structure ( PageRank).
+
+\paragraph{Architecture}
+
+\paragraph{Pre-processing}
+
+In full text retrieval each document is represented by a set of index terms. To get the index terms, we strip the text of its structure (e.g. XML) and of all the stopwords (e.g. "a", "and", etc.). We can also use stemming, where reduce a word to a word root ({connecting, connection...} reduce to connect). 
+\paragraph{Notation}
+\begin{itemize}
+\item \textit{Document d:} expresses ideas about some topic in a natural language. Represented by a set of index terms $k_i$
+\item \textit{Query q:} express an information need for documents pertaining some topic.
+\item \textit{index term:} a semantic unit, a word, short phrase, or potentially root of a word.
+\item \textit{Database DB:} collection of $n$ documents $d_j \in DB, j=1,..,n$.
+\item \textit{Vocabulary T:} collection of $m$ index terms $k_i \in T, i=1,...,m$.
+\item \textit{weight}: The importance of an index term $k_i$ for the meaning of a document $d_j$ is represented by a weight $w_{ij} \in [0,1]$; we write $d_j = (w_{1j},...,w_{mj})$
+\end{itemize}
+
+\subsubsection{Boolean retrieval}
+The user specifies which terms should be present in the documents. This retrieval method is similar to database querying, as requests are specified as first order expressions.
+\\
+Retrieval language:
+\[ expr ::= term|(expr)|\neg expr|expr\land expr|expr \lor expr 
+\]
+with weights $w_{ij} = 1\text{ if }k_j \in d_i$ and $0$ otherwise.
+\paragraph{"Similarity" Computation in Boolean Retrieval}
+
+To compute the similarity of a document $d$ with a query $q$, we proceed in three steps
+\begin{enumerate}
+\item we determine the disjunctive normal form ( a disjunction of conjunctions) of $q$ using De Morgan's law ( $\neg( A \land B )= \neg A \lor \neg B$ ). Thus $q = ct_1 \lor ... \lor ct_l$ where $ct= \underline{k_1} \land ... \land \underline{k_m}$, $\underline{k_i} \in \{k_i, \neg k_i\}$.
+\item For each conjunctive term $ct$ create its weight vector $vec(ct)$ where $vec(ct)=(w_1,...,w_m)$ and 
+\begin{equation}
+w_i = \begin{cases}
+	1, & \text{if } k_i \text{ occurs in } ct \\
+	-1, & \text{if } \neg k_i \text{ occurs in } ct \\
+	0, & \text{otherwise}
+	\end{cases}
+\end{equation}
+
+\item if one weight vector of $ct_i$ in $q$ matches the document weight vector $d_j = (w_{1j},...,w_{mj})$ of a document $d_j$, then the document $d_j$ is relevant, i.e., $sim(d_j,q)=1$. We say that $vec(ct)$ matches $d_j$ if: 
+\begin{itemize}
+\item $w_i = 1 \rightarrow w_{ij} = 1$
+\item $w_i = -1 \rightarrow w_{ij} = 0$
+
+\end{itemize}
+Intuitively, 
+\begin{itemize}
+\item if $w_i = 1$ we want term $k_i$ to appear in $d_j$
+\item if $w_i=-1$ we want term $k_i$ \textbf{not} to appear in $d_j$.
+\item if $w_i = 0$ we don't care if $k_i$ appears in $d_j$ or not
+ \end{itemize} 
+\end{enumerate} 
+\textbf{Example}
+
+
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{ll}
+index terms & $\{application, algorithm, theory, foo\}$ \\
+Query & $"application" \land ("algorithm" \lor \neg "theory")$ \\
+Disjunctive normal form of query &\renewcommand{\arraystretch}{1}
+ \specialcell[t]{$("application" \land "algorithm" \land "theory") \lor $\\$
+("application" \land "algorithm" \land \neg "theory") \lor $\\$
+("application" \land \neg "algorithm" \land "theory")$} \\
+Query weight vectors & $q= \{(1,1,1,0),(1,1,-1,0),(1,-1,-1,0)\}$\\
+Documents & \renewcommand{\arraystretch}{1}
+	\specialcell[t]{$d_1 = \{algorithm, theory, application\} (1,1,1,0)$\\
+			$d_2 = \{algorithm, theory,foo\} (0,1,1,1)$\\
+			$d_3 = \{application, algorithm,foo\} (1,1,0,1)$} \\
+
+Result & $sim(d_1,q)= sim(d_3,q)=1, sim(d_2,q)=0$ \\
+\end{tabular}
+
+
+\textbf{Advantages:} Simple, objective results
+
+\textbf{Drawbacks:} No ranking, queries are difficult to formulate, no tolerance for errors
+
+\subsubsection{Vector space retrieval}
+\textit{Key Idea:} represent both the document and the query by a weight vector in the m-dimensional keyword space assigning non-binary weights and determine their distance in the keyword space. In this model, the similarity measures can take values in $[0,1]$.
+
+\paragraph{Similarity Computation}
+Our distance measure has to satisfy the following property: 
+\begin{itemize}
+\item If two vectors coincide completely their similarity should be maximal, i.e. 1
+\item If two vectors have no keywords in common, i.e. the two vectors are orthogonal- the similarity should be minimal, i.e. 0
+\end{itemize}
+
+$sim(\vec{q}, \vec{d_j}) = \cos(\theta)= \frac{\vec{d_j} \cdot \vec{q}}{\abs{\vec{d_j}}\abs{\vec{q}}}= \frac{\sum_{i=1}^m w_{ij}w_{iq}}{\abs{\vec{d_j}}\abs{\vec{q}}}$
+
+
+where $\abs{v} = \sqrt{\sum_{i=1}^m v_i^2}$.
+
+\paragraph{Term Frequency Inverse Document Frequency (tf-idf)} Not all words carry the same information on the meaning of a document. We want a weighting scheme that reflects this.
+
+\textit{Term Frequency} Documents are similar if they contain the same keywords (frequently). Therefore we use the (normalized) frequency $freq(i,j)$ of the keyword $k_i$ in the documents $d_j$ to determine the weight of the document vectors.
+
+\[tf(i,j) = \frac{freq(i,j)}{\text{max}_{k \in T}freq(k,j)}\]
+
+\textit{Inverse Document Frequency} considers how frequent a term is in the document collection of size $n$ (measure for distinctiveness). It can be interpreted as the amount of information associated with term $k_i$
+
+\[idf(i)= \log(\frac{n}{n_i}) \in [0,\log(n)]\]
+
+we can now compute each term weight $w_{ij}$ by
+\[w_{ij} = tf(i,j)idf(i) = \frac{freq(i,j)}{\text{max}_{k \in T}freq(k,j)} \log(\frac{n}{n_i})\]
+
+
+\paragraph{Advantages:}
+\begin{itemize}
+\item term-weighting improves quality of the answer set. 
+\item partial matching allows retrieval of documents that approximate the query conditions
+\item cosine ranking formula sorts documents according to degree of similarity to the query
+\end{itemize} 
+\paragraph{drawbacks:} Assumes Independence of index terms. (not clear this is a disadvantage)
+\subsection{User Relevance Feedback}
+
+Usually, a user doesn't know the information he need nor how to formulate the appropriate query. But he can identify relevant documents. We can use this feedback to improve our algorithm.
+\paragraph{Identifying Relevant Documents}
+if $C_r$ is the set of relevant documents, then the optimal query vector is 
+
+\[ \vec{q}_{opt} = \frac{1}{|C_r|} \sum_{\vec{d_j} \in C_r} \vec{d_j} - \frac{1}{n-|C_r|} \sum_{\vec{d_j} \in C_r} \vec{d_j} \]
+
+Intuitively this expression gives, proportional to the frequency of the documents, positive weights to document vectors in the set of relevant documents and negative weights to the others. In practice we don't know $C_r$ however with the user feedback we can approximate it by:
+
+\[ \vec{q}_{approx} = \alpha\vec{q} + \frac{\beta}{|D_r|}\sum_{\vec{d_j} \in D_r} \vec{d_j} - \frac{\gamma}{R\symbol{92}D_r} \sum_{\vec{d_j} \in D_r} \vec{d_j} \]
+
+Where $D_r$ are the documents identified as relevant by the user, from some result set $R$ of a retrieval query $q$.
+
+we can tune the approximation with the following parameters:
+\begin{itemize}
+\item $\alpha$: keeping the original vector
+\item $\beta$: increasing the weight of the relevant vectors
+\item $\gamma$: increasing the (negative) weight of the non-relevant vectors.
+\end{itemize}
