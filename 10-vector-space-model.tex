@@ -26,11 +26,11 @@ If $A$ is the answer set and $R$ the relevant documents:
 
 Most of the information needs and content are expressed in natural language. We will use a strongly simplified model of text called "full text" retrieval approach. This model ignores grammar and meaning of words. This simplification has proven successful. We can then extend this model with other features such as link structure ( PageRank).
 
-\paragraph{Architecture}
 
 \paragraph{Pre-processing}
 
 In full text retrieval each document is represented by a set of index terms. To get the index terms, we strip the text of its structure (e.g. XML) and of all the stopwords (e.g. "a", "and", etc.). We can also use stemming, where reduce a word to a word root ({connecting, connection...} reduce to connect). 
+
 \paragraph{Notation}
 \begin{itemize}
 \item \textit{Document d:} expresses ideas about some topic in a natural language. Represented by a set of index terms $k_i$
@@ -79,20 +79,22 @@ Intuitively,
 
 
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{ll}
-index terms & $\{application, algorithm, theory, foo\}$ \\
-Query & $"application" \land ("algorithm" \lor \neg "theory")$ \\
-Disjunctive normal form of query &\renewcommand{\arraystretch}{1}
+\begin{tabular}{l}
+\underline{index terms:} \\ $\{application, algorithm, theory, foo\}$ \\
+\underline{Query:} \\ $"application" \land ("algorithm" \lor \neg "theory")$ \\
+\underline{Disjunctive normal form of query:} \\ \renewcommand{\arraystretch}{1}
  \specialcell[t]{$("application" \land "algorithm" \land "theory") \lor $\\$
 ("application" \land "algorithm" \land \neg "theory") \lor $\\$
 ("application" \land \neg "algorithm" \land "theory")$} \\
-Query weight vectors & $q= \{(1,1,1,0),(1,1,-1,0),(1,-1,-1,0)\}$\\
-Documents & \renewcommand{\arraystretch}{1}
+\underline{Query weight vectors:} \\ $q= \{(1,1,1,0),(1,1,-1,0),(1,-1,-1,0)\}$\\
+\underline{Documents:} \\
+ \renewcommand{\arraystretch}{1}
 	\specialcell[t]{$d_1 = \{algorithm, theory, application\} (1,1,1,0)$\\
 			$d_2 = \{algorithm, theory,foo\} (0,1,1,1)$\\
 			$d_3 = \{application, algorithm,foo\} (1,1,0,1)$} \\
 
-Result & $sim(d_1,q)= sim(d_3,q)=1, sim(d_2,q)=0$ \\
+\underline{Result:} \\
+$sim(d_1,q)= sim(d_3,q)=1, sim(d_2,q)=0$ \\
 \end{tabular}
 
 
