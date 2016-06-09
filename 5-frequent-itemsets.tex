@@ -1,0 +1,125 @@
+\section{Frequent Itemsets}
+
+\subsection{Introduction to Data Analysis}
+
+We gather more and more data (2x more each year) and most of it is useless. Recently the rate of data growth started exceeding the rate of storage growth.
+Interesting information can be gathered from this large amount of data (data analytics, data mining).
+This can be done in two ways: Data management (this is mainstream Big Data, i.e. ways of storing, indexing and retrieving data) and Data analytics.
+Data analytics is the "Analysis of large datasets to find relationships and to summarize the data in novel ways that are both understandable and useful." A classical example is the shopping basket analysis (people who buy diapers also buy beer on Friday afternoons).
+
+\subsection{Components of Data Analytics}
+Data analytics can be based on:
+\begin{itemize}
+\item Local properties (patterns applying to part of the data)
+\item A global descriptive model (structure description)
+\item A global predictive model (function on the data)
+\item Exploratory data analysis (interactive tools and visualisation)
+\end{itemize}
+
+Four main components:
+\begin{enumerate}
+\item Pattern structure and model representation
+\item Scoring function
+\item Optimization and search
+\item Data management
+\end{enumerate}
+
+Data analytics is part of a larger system which:
+\begin{itemize}
+\item Collects and integrates potentially heterogeneous data into data warehouses
+\item Selects subsets of the data to perform specific data mining tasks (those are called data-marts)
+\item Performs actual data mining on the data-marts
+\item Assesses the results of data mining by evaluating the usefulness of the mined patterns
+\end{itemize}
+
+\subsection{Pattern structure}
+An association rule is a statement of the form
+
+$Body \implies Head [support, confidence]$
+
+where Body and Head are predicates.
+A rule can be single-dimensional (body depends on only one predicate) or multi-dimensional (body depends on multiple predicates). Multi-dimensional rules can be transformed into single-dimensional rules by creating a new predicate englobing all the others.
+Example: (x is 19-25 y.o. and x buys chips) becomes (x is a customer, who is 19-25 and buys chips)
+
+\subsection{Scoring function}
+Support: $P[\{Body, Head\}]$ (The rule can be applied often)
+Confidence: $P[\{Head\} | \{Body\}]$ (The rule means something)
+
+\subsection{Optimization and search}
+
+\subsubsection{Definitions}
+Given a set of items $I$, an itemset is a subset of $I$.
+A transaction is a tuple $(id, T)$ where $T$ is an itemset.
+We have a database of transactions $D$.
+Given these definitions, an association rule $A \implies B [s, c]$ is characterized as follows:
+\begin{itemize}
+\item A and B are disjoint itemsets appearing in at least one transaction.
+\item support $s = p(A \cup B) = \frac{count(A \cup B)}{|D|}$
+\item confidence $c = p(B|A) = \frac{s(A \cup B)}{s(A)}$
+\end{itemize}
+
+Now given a database of transactions, we want to get all rules $A \implies B [s,c]$ such that $s > s_{min}$ and $c > c_{min}$.
+
+\subsubsection{Frequent itemsets method - The Apriori algorithm}
+This method consists in finding $J \subseteq I$ such that $p(J) > s_{min}$, i.e. itemsets with sufficient support.
+This is based on the assumption that $A \implies B$ can only be an association rule if $A \cup B$ is a frequent itemset.
+Apriori property: if an itemset is frequent, then any subset of this itemset is frequent too (it appears at least as often as the enclosing itemset).
+Given that, we can find frequent itemsets by increasing cardinality.
+
+\paragraph{JOIN step}
+Given all frequent itemsets of size $k-1$, The JOIN step consists of finding potential frequent itemsets of size $k$.
+To do so, we create a $k$-itemset out of every pair of $(k-1)$-itemsets that differ only by one element, by taking their union.
+The efficient way of doing this is as follows:
+\begin{itemize}
+\item Sort each itemset (by some ordering on the items)
+\item Put together the itemsets which have their $(k-2)$ first elements in common.
+\item For each of these sets of itemsets, create $k$-itemsets consisting of the common $(k-2)$ first items, and every possible pair of the last elements of the $(k-1)$-itemsets.
+\end{itemize}
+This method minimizes the number of generated potential frequent itemsets, while still being conservative.
+
+\paragraph{PRUNE step}
+Given the candidate frequent itemsets computed at the JOIN step, the PRUNE step removes those which contain a non-frequent $(k-1)$-itemset.
+Indeed, as all subsets of a frequent itemset are frequent, containing an itemset that is not frequent is sufficient to decide that the itemset is not frequent.
+
+\paragraph{Final step}
+Given the surviving itemsets from the PRUNE step, the final step consists of counting the number of occurences of each of these itemsets in the database.
+This is an expensive step (full access to the DB), but its size is greatly reduced by the JOIN and PRUNE steps.
+The Apriori algorithm is therefore the succession of the JOIN, PRUNE and Final steps on increasing itemset sizes (from $k = 1$) until the resulting set is empty. The set of frequent itemsets is therefore the union of the sets computed at each step.
+
+\subsubsection{Pertinent rules}
+Once the frequent itemsets are computed, we compute the pertinent rules as follows:
+\begin{itemize}
+\item Given a frequent itemset $J$, a candidate rule is $A \implies J/A$, for all $A \subseteq J$. (Recall that an association rule $A \implies B$ is such that $A \cup B$ is a frequent itemset and $A$ and $B$ are disjoint).
+\item The rule has enough support (frequent itemsets were defined to satisfy this), it also needs good confidence. Confidence is $\frac{s(J/A \cup A)}{s(A)} = \frac{s(J)}{s(A)}$.
+\item As $J$ is a frequent itemset, so is $A$ and both support counts are available from the Apriori algorithm, so the computation is straightforward
+\end{itemize}
+
+\subsubsection{Interest of association rules}
+Some rules can have high confidence if their head is very frequent.
+We define the Interest of a rule $I \implies j$ by $c(I \implies j) - P[j]$, which is the difference between the confidence of the rule and the fraction of transactions that contain $j$.
+Intuitively, this means that the rule tells us something interesting, that we couldn't have inferred from the frequency of the head.
+
+\subsubsection{Quantitative attributes}
+For now the search was applied on a finite item space. When applying it to continuous and/or infinite item spaces, one needs to discretize the data before applying the Apriori algoritm. This can be done in two ways:
+\begin{itemize}
+\item Static discretization: put the values in predefined bins
+\item Dynamic discretization: compute the bins based on the distribution of the data
+\end{itemize}
+
+\subsection{Data management}
+The following techniques can be used to improve the Apriori algorithm on large datasets:
+\begin{itemize}
+\item Transaction reduction: when looking for frequent itemsets, a transaction that doesn't contain any frequent $k$-itemset can be omitted in scans for bigger itemsets.
+\item Partitioning: a frequent itemset must be frequent on at least one partition of the data. We can therefore mine on partitions, and compute the exact frequencies only once.
+\item Sampling: we can mine on a sampled subset of the DB (with a lower minimal support), and compute the exact frequencies only once against the whole DB.
+\end{itemize}
+
+\paragraph{The SON algorithm}
+This implements partitioning. In a first pass, we read the whole transaction database chunk by chunk, such that every chunk fits in memory. An itemset is a candidate if it is frequent in any of the chunks.
+On a second pass, we count all the candidate itemsets and determine which are frequent in the entire set.
+The SON algorithm can be efficiently computed using MapReduce:
+\begin{itemize}
+\item Compute frequent itemsets at each node
+\item Distribute candidates to all nodes
+\item Accumulate the counts of all candidates
+\end{itemize}
