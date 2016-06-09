@@ -1,0 +1,114 @@
+\section{Inverted Files}
+In order to speed up search of term occurrences, use indexing $\rightarrow$ \emph{Inverted files} is most widely used mechanism. It is appropriate when the text collection is \emph{semi-static}.
+
+\paragraph{Definition} For a term $k$, \textbf{inverted list} $l_k = \langle f_k : d_{i_1}, ..., d_{i_{f_k}} \rangle$,
+
+where $f_k$ is the $n^\circ$ of docs in which $k$ occurs, $d_{i_1}, ..., d_{i_{f_k}}$ is the list of identifiers of docs containing $k$.
+
+\textbf{Inverted file} $IF = \langle i, k_i, l_{k_i}, i = 1,..., m \rangle$,
+
+lexicographically ordered seq of inverted lists, constructed by concatenating the inverted lists \emph{of all terms occurring in the document collection}.
+
+\paragraph{Example}Take the following document collection
+\begin{lstlisting}
+  B3 Automatic Differentiation of Algorithms: Theory, Implementation, and Application
+  B5 Ideals, Varieties, and Algorithms: An Introduction to Computational Algebraic Geometry and Commutative Algebra
+\end{lstlisting}
+
+(Part of) The inverted file obtained is
+\begin{lstlisting}
+  1 Algorithms 2 : 3 5
+  2 Application 1 : 3
+  ...
+\end{lstlisting}
+
+\subsection{Physical organization}
+Take into account quantitative characteristics $\longrightarrow$ \# references to docs (occurrences of index terms in docs) $\gg$ \# index terms (\# inverted lists). For a doc collection of size $n$
+\begin{tabular}{ll}
+  \textbf{\# occurrences of index terms}: & $O(n)$ \\
+  \textbf{\# different index terms}: & $O(n^\beta)$
+\end{tabular}
+
+$\beta \approx 0.5$, according to Heap's law. So a doc collection of $10^6$ entries would have approx. $10^3$ index terms.
+
+\paragraph{In main memory} Store \textbf{index terms} and \textbf{frequencies of occurrences} in index file. Access typically by \emph{binary search}, \emph{hash tables}, \emph{B+-Trees}, \emph{tries}.
+\paragraph{In secondary storage} Store \textbf{posting file} and \textbf{document file}, where the posting file is a document that stores the occurrence of a term in a document in the collection. For each \emph{index term} $\longrightarrow$ relevant start position in \emph{posting file}. Occurrences in \emph{posting file} $\longrightarrow$ entries in \emph{document file}.
+
+\paragraph{Size optimization} \textbf{Addressing granularity} (for posting file) determines how the positions of index terms are recorded.
+\begin{itemize}
+  \item exact word proposition
+  \item occurrence within document
+  \item occurrence within block (multiple documents)
+\end{itemize}
+\emph{Coarse granularity} $\rightarrow$ fewer entries, reduction in pointer size, \emph{but} additional post-processing to determine exact positions of index terms.
+
+\textbf{Index compression} to reduce space in inverted list. Represent each document identifier as difference with previous one:
+\begin{center}
+  $l_k = \langle f_k: d_{i_1}, d_{i_2} - d_{i_1}, ..., d_{i_{f_k}} - d_{i_{f_k - 1}} \rangle$
+\end{center}
+In practise, reduction of index to 10-15\% of db size. Also, apply number encoding to resulting integer values.
+
+\subsection{Searching the Inverted File}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/trie_vocabulary.png}
+  \caption{Construction of the trie structure for a given text}
+  \label{fig:trie_vocabulary}
+\end{figure}
+
+\begin{description}
+
+  \item[Vocabulary search]
+  \begin{itemize}
+    \item[]
+    \item Vocabulary kept in \emph{trie} (\cref{fig:trie_vocabulary})
+    \item Word $\longrightarrow$ list of occurrences
+    \item Read text sequentially, search in vocabulary
+    \item If not found, add to vocabulary with empty list
+    \item Add word position to end of list
+  \end{itemize}
+
+  \item[Retrieval of occurrences] (from posting file) after complete traversal $\rightarrow$ cost $O(n)$
+  \begin{itemize}
+    \item Write list of occurrences contiguously to \emph{posting file} (\cref{fig:trie_to_postings})
+    \item Use trie structure as data access for index in main memory
+  \end{itemize}
+
+  \item[Manipulation of occurrences] (e.g. compute term frequencies)
+
+\end{description}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/trie_to_postings.png}
+  \caption{Derive inverted file \& postings file from trie structure. Traverse top-down and left-to-right. Add new index terms to end of inverted file (occurrence to postings file).}
+  \label{fig:trie_to_postings}
+\end{figure}
+
+\paragraph{Index construction} If not enough space in memory, write partial index to disk and merge all partial indices once finished. On merge, scan indices \emph{in parallel sequentially} on disk, then write result sequentially. Complexity of merging is $O(n\log_2(\frac{n}{M}))$
+
+\paragraph{Map-Reduce} for web scale index construction. Parallelization of index construction. Tuned towards \emph{cost efficiency} and \emph{simplicity of programming}.
+
+Example of constructing an inverted file index:
+\begin{itemize}
+  \item partition document collection and assign to mapper nodes
+  \item mapper nodes extract word statistics
+  \item mapper send local results to responsible reducer node (based on word/key)
+  \item reducer aggregates statistics
+\end{itemize}
+
+\subsection{Distributed Retrieval}
+Store posting lists for different terms on \emph{different nodes}. We want to find \textbf{top-k} results of a query, but \emph{avoid} sending whole posting lists over network.
+
+\paragraph{Fagin's Algorithm}
+Entries in posting list are \emph{sorted according to tf-idf weights}.
+\begin{enumerate}
+  \item Scan lists in parallel, in round-robin, until $k$ documents are detected that occur in \emph{all lists}. When document is found in multiple lists, add scores.
+  \item Retrieve missing scores (of documents not found in all lists). Random access with index.
+  \item Return top-k elements
+\end{enumerate}
+
+Step 2 is most expensive. Algorithm always returns k elements. For $n$ documents $O(\sqrt{kn})$ entries are read in each list, if entries are uncorrelated (better if positively correlated, i.e. highly ranked in one list $\rightarrow$ highly ranked in other list).
+
+Avoid sending messages to nodes for every element retrieved from list. Node \emph{guesses} how many entries need to be read, sends chunk of list to other nodes (ideal case). 
