@@ -95,3 +95,10 @@ Better alternative technique is the \textbf{Latent Dirichlet Allocation} $\longr
 
 \subsection{Word Embeddings}
 Focus on smaller context of word $C(w) \rightarrow$ choose number of preceding and succeeding words (e.g. 5). Two words are \textbf{similar} if they have \textbf{similar contexts}. Captures both \emph{syntactic} (king - kings) and \emph{semantic} (king - queen) similarity. This is implicitly used with the term document matrix $M$.
+
+Model how likely a word and context occur together
+\begin{itemize}
+  \item map words (and context words) to low-dimensional space (e.g. $d = 200$)
+  \item interpret vector distance as measure of likelihood
+  \item because of projection in low-dimensional space, similar words and contexts should be close
+\end{itemize}
