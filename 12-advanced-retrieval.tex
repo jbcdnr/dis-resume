@@ -1,4 +1,4 @@
-\section{AdvancedD retrieval models}
+\section{Advanced retrieval models}
 \subsection{Latent semantic indexing}
 Vector Space Retrieval not ideal, vague and noisy. Information needed is more related to \emph{concepts}, ideas than to index terms.
 
@@ -98,7 +98,65 @@ Focus on smaller context of word $C(w) \rightarrow$ choose number of preceding a
 
 Model how likely a word and context occur together
 \begin{itemize}
-  \item map words (and context words) to low-dimensional space (e.g. $d = 200$)
+  \item map words to low-dimensional space (e.g. a few hundred dimensions $d$)\\
+  $\rightarrow v_w = W^{(1)} \cdot w$ ($m$ rows representing words in concept space of dimension $d$)
+  \item map concepts to low-dimensional space \\
+  $\rightarrow v_c = W^{(2)}\cdot c$
   \item interpret vector distance as measure of likelihood
   \item because of projection in low-dimensional space, similar words and contexts should be close
 \end{itemize}
+
+Coefficient of $W^{(1)}$ and $W^{(2)}$ written $\theta$. We want to \emph{learn parameters directly from data}. For $(w,c)$, if it comes from data, we want the model to give us a probability of 1. To get probabilty from the model (embedding into low-dimensional space):
+\begin{itemize}
+  \item take scalar product of the embedded word and context word vectors (where paremeters $\theta$ are hidden) $\longrightarrow$ product will be large positive when vectors are similar, large negative when opposite.
+  \item apply \textbf{sigmoid} function $\mathbf{\sigma}$ to get value in $[0, 1]$ $\longrightarrow$ produces values close to 0 for large negatives, close to 1 for large positives.
+\end{itemize}
+
+\begin{align*}
+  P(D = 1 | w, c, \theta) &= \sigma(v_c \cdot v_w) \\
+  &= \frac{1}{1 + e^{-v_c\cdot v_w}}
+\end{align*}
+
+This model is resistant to large outliers.
+
+\paragraph{Adding negative samples} Negative samples $\widetilde{D}$ not occurring in document collection. To get best model, find parameter $\theta$ that maximizes overall probability (product of all individual probabilities).
+
+\begin{align*}
+  \theta = \argmax_{\theta} \prod_{(w,c) \in D} P(D = 1 | w, c, \theta) \\
+  \prod_{(w,c) \in \widetilde{D}} P(D = 0 | w, c, \theta)
+\end{align*}
+
+Define a loss function
+$$ J(\theta) = \log \sigma(v_c \cdot v_w) - \sum^K_{k=1} \log \sigma(v_{c_k} \cdot v_w)
+$$
+to transform the maximation problem into a minimization problem. Then $\theta$ can be determined using gradient descent, i.e. for every $(w,c) \in D$
+$$ \theta^{new} = \theta^{old} - \alpha \nabla_\theta J_t(\theta)
+$$
+This will affect only rows in $W^{(1)}$ and $W^{(2)}$ where word and context words appear.
+
+\paragraph{Obtaining negative samples} Choose any word from the vocabulary that is not contained itself in the context. We consider the frequency at which the words occur in the document collection. However, \emph{high frequency} words (stopwords) would be favored too much $\longrightarrow$ moderate probability of word occurrence by exponent ($\frac{3}{4}$), i.e. for probability $p_w$ choose $w$ with $p_w^{\frac{3}{4}}$. In practise, we use small sample of words not occurring in the context (not whole data collection).
+
+So we get two matrices $W^{(1)}$ and $W^{(2)}$ that map words into a low-dimensional space for different reasons. Words appearing in similar contexts generate similar contexts. They are thus mapped to similar representations. The final model is constructed as $\mathbf{W = W^{(1)} + W^{(2)}}$.
+
+\paragraph{GLOVE} based on observation that ratios of probabilities can be used to capture semantic relationships among terms beyond co-occurrence (\cref{fig:GLOVE}).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/GLOVE.png}
+  \caption{GLOVE model}
+  \label{fig:GLOVE}
+\end{figure}
+
+\paragraph{Properties of word embeddings}
+\begin{enumerate}
+  \item Similar terms are clustered
+  \item syntactic and semantic relationships encoded as linear mappings (\cref{fig:semantic_relations})
+  \item dimensions can capture meanings
+\end{enumerate}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{figures/semantic_relations.png}
+  \caption{Word embeddings enable \emph{computing} with relationships (word analogy task). Analogies translate to linear mappings.}
+  \label{fig:semantic_relations}
+\end{figure}
