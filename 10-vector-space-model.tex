@@ -47,20 +47,20 @@ The user specifies which terms should be present in the documents. This retrieva
 Retrieval language:
 \[ expr ::= term|(expr)|\neg expr|expr\land expr|expr \lor expr 
 \]
-with weights $w_{ij} = 1\text{ if }k_j \in d_i$ and $0$ otherwise.
+with weights $w_{ij} = 1\text{ if }k_i \in d_j$ and $0$ otherwise.
 \paragraph{"Similarity" Computation in Boolean Retrieval}
 
 To compute the similarity of a document $d$ with a query $q$, we proceed in three steps
 \begin{enumerate}
 \item we determine the disjunctive normal form ( a disjunction of conjunctions) of $q$ using De Morgan's law ( $\neg( A \land B )= \neg A \lor \neg B$ ). Thus $q = ct_1 \lor ... \lor ct_l$ where $ct= \underline{k_1} \land ... \land \underline{k_m}$, $\underline{k_i} \in \{k_i, \neg k_i\}$.
 \item For each conjunctive term $ct$ create its weight vector $vec(ct)$ where $vec(ct)=(w_1,...,w_m)$ and 
-\begin{equation}
+\begin{equation*}
 w_i = \begin{cases}
 	1, & \text{if } k_i \text{ occurs in } ct \\
 	-1, & \text{if } \neg k_i \text{ occurs in } ct \\
 	0, & \text{otherwise}
 	\end{cases}
-\end{equation}
+\end{equation*}
 
 \item if one weight vector of $ct_i$ in $q$ matches the document weight vector $d_j = (w_{1j},...,w_{mj})$ of a document $d_j$, then the document $d_j$ is relevant, i.e., $sim(d_j,q)=1$. We say that $vec(ct)$ matches $d_j$ if: 
 \begin{itemize}
@@ -119,7 +119,7 @@ where $\abs{v} = \sqrt{\sum_{i=1}^m v_i^2}$.
 
 \paragraph{Term Frequency Inverse Document Frequency (tf-idf)} Not all words carry the same information on the meaning of a document. We want a weighting scheme that reflects this.
 
-\textit{Term Frequency} Documents are similar if they contain the same keywords (frequently). Therefore we use the (normalized) frequency $freq(i,j)$ of the keyword $k_i$ in the documents $d_j$ to determine the weight of the document vectors.
+\textit{Term Frequency.} Documents are similar if they contain the same keywords (frequently). Therefore we use the (normalized) frequency $freq(i,j)$ of the keyword $k_i$ in the documents $d_j$ to determine the weight of the document vectors.
 
 \[tf(i,j) = \frac{freq(i,j)}{\text{max}_{k \in T}freq(k,j)}\]
 
@@ -144,11 +144,11 @@ Usually, a user doesn't know the information he need nor how to formulate the ap
 \paragraph{Identifying Relevant Documents}
 if $C_r$ is the set of relevant documents, then the optimal query vector is 
 
-\[ \vec{q}_{opt} = \frac{1}{|C_r|} \sum_{\vec{d_j} \in C_r} \vec{d_j} - \frac{1}{n-|C_r|} \sum_{\vec{d_j} \in C_r} \vec{d_j} \]
+\[ \vec{q}_{opt} = \frac{1}{|C_r|} \sum_{\vec{d_j} \in C_r} \vec{d_j} - \frac{1}{n-|C_r|} \sum_{\vec{d_j} \not \in C_r} \vec{d_j} \]
 
 Intuitively this expression gives, proportional to the frequency of the documents, positive weights to document vectors in the set of relevant documents and negative weights to the others. In practice we don't know $C_r$ however with the user feedback we can approximate it by:
 
-\[ \vec{q}_{approx} = \alpha\vec{q} + \frac{\beta}{|D_r|}\sum_{\vec{d_j} \in D_r} \vec{d_j} - \frac{\gamma}{R\symbol{92}D_r} \sum_{\vec{d_j} \in D_r} \vec{d_j} \]
+\[ \vec{q}_{approx} = \alpha\vec{q} + \frac{\beta}{|D_r|}\sum_{\vec{d_j} \in D_r} \vec{d_j} - \frac{\gamma}{\abs{R\symbol{92}D_r}} \sum_{\vec{d_j} \in D_r} \vec{d_j} \]
 
 Where $D_r$ are the documents identified as relevant by the user, from some result set $R$ of a retrieval query $q$.
 
