@@ -1,0 +1,106 @@
+\section{Link Analysis}
+
+\subsection{Hyperlinks}
+
+We want to look at the links between the documents, rather than just their content.
+The amount of links from and to a document gives information about the document relevance. More links mean more relevance, but some links have more weight than others.
+Links are powerful sources of authenticity and authority (distinguish spammers from good email users, for example).
+
+Links can be used for clustering (the links encode an idea of proximity) and classification (documents linked to each other often share a common subject).
+
+\subsubsection{Simple iterative logic}
+
+Starting from a set of good nodes, a set of bad nodes and a set of unknown nodes, we can classify the unknown nodes as good or bad based on the following conditions:
+\begin{itemize}
+\item If a node points to a bad node, it is bad.
+\item If a node is pointed to by a good node, it is good.
+\end{itemize}
+
+\subsection{The Web as a Directed Graph}
+
+The Web is represented as a directed graph where each page is a node and each link is an edge. A link is seen as a conferral of authority to the destination page, and the text of the anchor on the source page is a description of the destination page.
+
+\subsubsection{The WWW Worm}
+
+Claimed to be the first search engine (1993). It worked by indexing anchor text, which means it included in the document some text contained in pages linking to the document.
+
+This method is easily spammable, and needed a way of defining authoritative content (i.e. widely known websites) to ensure its fairness.
+
+\subsubsection{Connectivity servers}
+
+Scanning the whole web is obviously expensive, so we need a way of storing the web graph in some clever way to be able to perform tasks on it.
+The most important queries include finding the predecessors and successors of given nodes.
+The critical part of the connectivity servers is the adjacency list, which has a potential size in $O(n^2)$ in the number of pages in the graph.
+Boldi and Vigna (2004) designed Webgraph, an algorithm to reduce the size of the adjacency lists. Their algorithm demands around 3 (nowadays it's 2) bits per link, whereas the naive implementation (for a 4 billion-page web where one page is encoded by a 32-bit integer) encodes links as 64 bits.
+The compression uses multiple features of the adjacency list:
+\begin{itemize}
+\item Similarity between lists
+\item Locality (many links go to "nearby" pages)
+\item Gap encodings in sorted lists
+\end{itemize}
+Boldi and Vigna exploited these properties by sorting all URLs in lexicographical order and considering that the adjacency list of an node is very likely to be similar to one of the six previous lists.
+
+\subsection{Pagerank}
+
+The inspiration for Pagerank came from the analysis of scholarly citations, to find authoritative publishers. The web is however more complex, with widespread spamming and deceiptive users (e.g. Link farms which began to appear after search engines began to use links for ranking).
+The first idea of pagerank is to perform a random walk of the web graph, and to use the number of times each page is visited as its score. However, there needs to be a way to deal with dead ends in the graph, so the walk doesn't get stuck.
+This way is to jump to a random page whenever we come to a dead end. In addition, we also jump to a random page with some probability (~15\%) at any page.
+
+\subsubsection{Random Walker Model}
+
+This model assumes that a page that is visited more often is more important. It then recursively computes the relevance of a page as follows:
+\begin{itemize}
+\item $P(p_i)$ is the relevance of page $p_i$ (given by the probability to visit $p_i$ during the random walk).
+\item $C(p_i)$ is the number of outgoing links of page $p_i$.
+\item $I(p_i)$ is the set of pages linking to $p_i$.
+\item Then, $P(p_i) = \sum_{p_j \in I(p_i)} \frac{P(p_j)}{C(p_j)}$. It is the sum of probabilities of arriving to $p_i$ from every edge having a link to the page, assuming that the crawler chooses a random link at each page.
+\end{itemize}
+
+\paragraph{Matrix formulation}
+
+The problem can be represented as a matrix computation. Let $\vec{p}$ be the vector of relevances for all pages. Then the recursive equation becomes $R\vec{p}$, with $R$ a $N$x$N$ matrix defined by $R_{ij} = \frac{1}{C(p_j)}$ if there is a link from $p_i$ to $p_j$, and $0$ otherwise.
+
+\paragraph{Teleporting}
+
+To avoid getting stuck in a node without outgoing links (a "sink of rank"), we jump to a random node with probability $1-q$ at every step (introduce a "source of rank". Thus the relevance equation becomes:
+$P(p_i) = c(\frac{1-q}{N} + q \sum_{p_j|p_j \rightarrow p_i} \frac{P(p_j)}{C(p_j)})$, with $c \geq 1$.
+The matrix formulation is changed to $\vec{p} = c(qR\vec{p} + (1-q)E)$, with $E$ a $N$x$N$ matrix with all entries equal to $1/N$.
+
+\paragraph{Practical computation}
+
+Practical computation iterates until the sum of changes in a pass $\delta$ is lower than some threshold $\epsilon$. Computation starts with an arbitrary relevance vector (for example the uniform vector).
+
+\subsubsection{Web search}
+
+In search engines, first a set of documents matching the keywords is retrieved, and the results are then merged with the PageRank results to have a good mix of precision (text retrieval) and quality (PageRank).
+The issues of PageRank lie with the difficulty to crawl the web and manage large link databases efficiently, as well as combining it with other ranking methods.
+
+\subsection{HITS}
+
+HITS (Hyperlink-Induced Topic Search) is based on the Hub-Authority ranking, which identifies not only authoritative pages (pages that are linked by relevant hubs), but also hub pages, which contain lots of links to relevant authorities.
+
+HITS search returns two sets (hub and authority) of pages, and is useful for searches on broad topics, where it returns a broader slice of public opinion.
+
+\subsubsection{The base set}
+
+The main idea is to extract from the web a base set of pages that could be good hubs or authorities. Then an iterative algorithm identifies actual hubs and authorities.
+The base set contains a "root set" of pages, which match the search criterion, as well as any page that points to or is pointed to by a page in the root set.
+
+\subsubsection{The algorithm}
+
+The algorithm computes a hub score and an authority score for each page, both initialized to zero. Then at each iteration, the scores are updated as follows:
+\begin{itemize}
+\item The hub score becomes the sum of all authority scores for the pages pointed to by the page.
+\item The authority score becomes the sum of all hub scores for the pages that point to the page.
+\end{itemize}
+It is possible to scale the values down at each iteration to prevent them from growing too much, as we are only interested in relative values.
+In practice, the algorithm converges after about 5 iterations.
+
+\subsubsection{Proof of convergence}
+
+Let A be the adjacency matrix of the pages (components are 1 if a link exists, 0 otherwise). Then, viewing hub and authority scores as vectors, we have $h = Aa$ and $a = A^t h$, which gives $h = AA^t h$ and $a = A^t Aa$, which means that $h$ is an eigenvector of $AA^t$ and $a$ is an eigenvector of $A^tA$.
+
+\subsubsection{Issues of HITS}
+
+Some off-topic authorities can be returned, if they talk about a very large topic.
+Affiliated pages and sites can boost each others' scores.
