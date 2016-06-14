@@ -6,7 +6,7 @@ People | Week | Status
 --- | --- | :---:
 Baptiste | 1-2 | 
 Prisca | 3-4 | ✔️
-Loïc | 5, 13 | 
+Loïc | 5, 13 | :hankey:
 Seb | 6-7 | 
 JB | 8-9 | ✔️
 Christophe | 10 |
