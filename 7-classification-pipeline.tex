@@ -82,7 +82,6 @@ There are two main classes of aggregation algorithms:
 \end{itemize}
 
 \textbf{Supervised} discretisation take class information into account, measuring the dependency of a discrete interval of values w.r.t the class label. Test that two adjacent intervals of a feature are independent of the class. If they are, merge them.
-\textbf{TODO}
 
 \subsubsection*{Feature selection}
 \textbf{Filtering}: rank features according to their predictive power and select the best ones.
@@ -105,9 +104,7 @@ Mutual information measures the information that $X$ and $Y$ share:
 \end{align*}
 If $I(X, Y) = 0$, knowing X does not tell anything about Y.
 
-The chi-square test checks the independence of the class and the feature, without indicatin the strength or irection of any existing relationship.
-
-\textbf{COULD BE MORE CLEAR}
+The chi-square test checks the independence of the class and the feature, without indicating the strength or direction of any existing relationship.
 
 \textbf{Important}: Collectively relevant features may look individually irrelevant.
 

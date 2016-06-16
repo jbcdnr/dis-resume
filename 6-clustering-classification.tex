@@ -38,7 +38,6 @@ and the algorithm:
 
 \noindent
 
-\fbox{\begin{minipage}{.9\linewidth]}
 \begin{enumerate}
 	\item randomly init the prototypes $\mu_i$
 	\item assign each object to the nearest prototype
@@ -46,7 +45,6 @@ and the algorithm:
 	\item update objects assignements (again to the nearest prototype)
 	\item if it hasn't converged, then go back to step 3.
 \end{enumerate}
-\end{minipage}}\\
 Some issues with K-mean:
 \begin{itemize}
 	\item often terminates at local optimum
@@ -100,7 +98,16 @@ The information gained (reduction of uncertainty) by a split is given by
 
 We then just have to take the attribute that leads to the highest reduction of uncertainty. However, it is important to understand that for a test dataset, a classifier might overspecialize and capture noise and outliers in the data rather than general properties. A first strategy to overcome this problem could be to stop partitioning when some criteria is met like the number of samples assigned to a leaf node
 
-Another idea is to use the principle of \textbf{minimum description length}. In a second phase, using a efficiency measurement of the tree nodes (count the number of mislassifications), we can merge some of the leaves. \textbf{TO EXTEND}\\
+Another idea is to use the principle of \textbf{minimum description length}.
+\begin{itemize}
+	\item Let $M_1, M_2, ..., M_n$ be a list of candidate models. The best model is the one that minimizes
+	$$ L(M) + L(D | M) $$
+
+	\item $L(M)$ is the length in bits of the description of the model ($\#$nodes, $\#$leaves,...)
+	\item $L(D|M)$ is the length in bits of the description of the data when encoded with the model
+\end{itemize}
+
+In a second phase, using a efficiency measurement of the tree nodes (count the number of mislassifications), we can merge some of the leaves. \\
 Decision trees issues:
 \begin{itemize}
 	\item extremely sensitive to small perturbations in the data and not incremental. A slight change or some new data available implies that the whole tree must be reconstructed from scratch.
