@@ -63,7 +63,7 @@ Be careful that in this technique the similarity between objects is computed onl
 \paragraph{Aggregate the ratings.}
 
 \[
-  r_x(a) = \frac{\sum_{b\in N_a} \text{sim}(a,b) r_x(b)}{\sum_{b\in N_a}}
+  r_x(a) = \frac{\sum_{b\in N_a} \text{sim}(a,b) r_x(b)}{\sum_{b\in N_a} |\text{sim}(a,b)|}
 \]
 
 There is still the scalability problem but we can calculate all the pair-wise item similarities in advance. Items similarities are more stable and we only need to consider the neighborhood (small) at runtime.
