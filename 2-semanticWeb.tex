@@ -3,7 +3,8 @@
 
 \subsection{Semi-structured data}
 
-\paragraph{Schemas} define data structures for database.Label the column, add constraint,... But might imposing the use of schema on the web might be too rigid and turn into a disadvantage
+\paragraph{Schemas} define data structures for database. Label the column, add constraint,
+\dots But imposing the use of schema on the web might be too rigid and turn into a disadvantage
 
 \paragraph{Semi-structure Data:} data that contains tags, markup, similar to specify the semantic of data valued and to relate different data values e.g. hierarchically. No predefined structure, no schema required (e.g. JSON, XML, ...)
 
@@ -13,14 +14,14 @@
 
 \begin{itemize}
 \item increased flexibility: dynamically adding or dropping structural elements such as attribute
-\item Self-conted data: context (schema information) directly encoded into data
+\item Self-contained data: context (schema information) directly encoded into data
 \end{itemize}
 
-\paragraph{Drawback:}	
+\paragraph{Drawback:}
 
 \begin{itemize}
 \item Loss of consistency
-\item Certain optimizations not feasible: in the absence of the schema information a simple research is very expensive (go through the whole tree)
+\item Certain optimizations not feasible: in the absence of the schema information, a simple search is very expensive (go through the whole tree)
 \end{itemize}
 
 \subsection{Semantic Web}
@@ -35,9 +36,9 @@ User-defined markup (schemas) provides possibility to share interpretation of da
 \item \bf{Standardization:} agree on common user-defined markup (schema)
 	\begin{itemize}
 		\item great if no pre-existing application
-		\item great if power player enforce it
-	\end{itemize}	
-\item \bf{ Translation:} create mapping among different schemas and databases
+		\item great if power player enforces it
+	\end{itemize}
+\item \bf{Translation:} create mapping among different schemas and databases
 	\begin{itemize}
 		\item requires human interpretation and reasoning
 		\item mappings can be difficult, expensive to establish
@@ -47,7 +48,7 @@ User-defined markup (schemas) provides possibility to share interpretation of da
 		\item requires human interpretation and reasoning
 		\item annotation can be difficult, expensive to establish
 		\item reasoning over the conceptualization can provide added value
-	\end{itemize}		
+	\end{itemize}
 \end{itemize}
 
 \subsubsection{Ontology}
@@ -57,10 +58,10 @@ User-defined markup (schemas) provides possibility to share interpretation of da
 \begin{itemize}
 	\item different information systems agree on the same ontology
 	\item relate their model/schema/data elements to the ontology
-	\item mapping can be construct via the ontology
-\end{itemize} 
+	\item mapping can be constructed via the ontology
+\end{itemize}
 
-\paragraph{Issues:} ontologies need to be represented in a language or data model. It should be very expressive and easy to use
+\paragraph{Issues:} ontologies need to be represented in a language or data model. It should be very expressive and easy to use.
 
 \begin{figure}[H]
 \begin{center}
@@ -70,7 +71,7 @@ User-defined markup (schemas) provides possibility to share interpretation of da
 \end{figure}
 
 
-\subsection{RDF - RDF Resource Description Framework}
+\subsection{RDF -- Resource Description Framework}
 
 \paragraph{RDF} is a standard supported by the W3C to represent metadata
 
@@ -82,8 +83,8 @@ RDF consists of two part:
 
 RDF statement can be represented as a:
 \begin{itemize}
-\item Statement where the subject is an URI (uniform resource identifier) and object isa URI or string
-\item Directed graph: the subject and object are represented as nodes (ellipses fror reousrces and rectanbles for literal and predicate as directed link)
+\item Statement where the subject is an URI (uniform resource identifier) and object is a URI or string
+\item Directed graph: the subject and object are represented as nodes (ellipses fror resources and rectangles for literal and predicate as directed link)
 \item XML Documents: encoded into XML
 \end{itemize}
 
@@ -114,7 +115,7 @@ RDF statement can be represented as a:
 \caption{Example of a RDF complex value}
 \end{figure}
 
-\paragraph{RDF containers}statement can be made not only using single resources but  as weill using collections of resources. Container are special resoruces of one or three container types that are specified in the RDF standard:
+\paragraph{RDF containers}statement can be made not only using single resources but  as well using collections of resources. Container are special resoruces of one or three container types that are specified in the RDF standard:
 
 \begin{itemize}
 \item Bag: unordered multi-set (= sets with multiple occurrence of the same resources)
@@ -129,9 +130,12 @@ RDF statement can be represented as a:
 \caption{Example of a containers (seq)}
 \end{figure}
 
-\paragraph{Creating new Resources:} RDF resources need not necessarily be a pre-existing Web resources identified by URIs, but can also be instantiated within RDF statement. \bf{rdf:ID} replace $rdf:about$ when the statement is about a new resources instead about an existing resource or use rdf:about$="\#..."$ e.g. rdf:ID$="12345" = $rdf:about $="\#12345"$
+\paragraph{Creating new Resources:} RDF resources need not necessarily be a pre-existing Web
+resources identified by URIs, but can also be instantiated within RDF statement. \bf{rdf:ID}
+replaces \bf{rdf:about} when the statement is about a new resources instead of an existing one or
+use rdf:about = ``\#\dots'' e.g. rdf:ID=``12345'' = rdf:about = ``\#12345''
 
-\paragraph{RDF Reification:} everything is a resource, RDF statement are also considered as resources and therefore it should be possible to make statement about them. We introduce a new resource which serve as representative for the statement. This resource obtains as properties all the constituent that make up the statement it represents. It is called \bf{reification}. The type of the object can be determined through a property \textit{rdf:type} pointing to the special resource \textit{rdf:statement} representing the category of statement. For the predicate a specific new resource representing the predicate is requires
+\paragraph{RDF Reification:} everything is a resource, RDF statements are also considered as resources and therefore it should be possible to make statements about them. We introduce a new resource which serves as representative for the statement. This resource obtains as properties all the constituent that make up the statement it represents. It is called \bf{reification}. The type of the object can be determined through a property \textit{rdf:type} pointing to the special resource \textit{rdf:statement} representing the category of statement. For the predicate a specific new resource representing the predicate is require
 
 \begin{figure}[H]
 \begin{center}
@@ -154,7 +158,7 @@ In RDF everything is a resource. In particular $classes$ are sets of $resourves$
 \label{fig:class}
 \end{figure}
 
-\paragraph{Properties:} it is possible to constraint the usage of RDF properties that connect resources as follows: by connecting the property resourve through the property \textit{rdfs:domain} to a class resource, one specify that the subject when using this property must by of the type of this class. We can also constrain the range using \textit{rdfs:range}
+\paragraph{Properties:} it is possible to constrain the usage of RDF properties that connect resources as follows: by connecting the property resource through the property \textit{rdfs:domain} to a class resource, one specifies that the subject when using this property must by of the type of this class. We can also constrain the range using \textit{rdfs:range}
 
 \begin{figure}[H]
 \begin{center}
@@ -164,14 +168,14 @@ In RDF everything is a resource. In particular $classes$ are sets of $resourves$
 \label{fig:class}
 \end{figure}
 
-\paragraph{RDF Schema Inheritance} 
+\paragraph{RDF Schema Inheritance}
 \begin{itemize}
 	\item \bf{rdfs:subClassOf:}
 		\begin{itemize}
 			\item $A$ subClassOf $B$: Every instance of $A$ is also instance of $B$
 			\item Properties are transitive, not reflexive, anti-symmetric (no cycles!),
 			\item M:N: a class can have arbitrarily many subclasses and superclasses
-			\item Subclass has all properties of the superclass		
+			\item Subclass has all properties of the superclass
 		\end{itemize}
 	\item \bf{rdfs:subPropertyOf}
 		\begin{itemize}
@@ -192,7 +196,7 @@ In RDF everything is a resource. In particular $classes$ are sets of $resourves$
 Limitation of RDF Schema:
 \begin{itemize}
 	\item Limited expressive power (sublcass, property, subproperty)
-	\item Unclear semantics (e.g. subpropertiy never has been precisely defined) it si therefore, for example, not always possible to decide whether a given RDF instance corresponds to a given schema
+	\item Unclear semantics (e.g. subpropertiy never has been precisely defined) it is therefore, for example, not always possible to decide whether a given RDF instance corresponds to a given schema
 	\item No reasoning support
 \end{itemize}
 
@@ -200,7 +204,7 @@ Requirement on ontology languages:
 \begin{itemize}
 	\item well \bf{designed}: intuitive to human user, adequate expressive power
 	\item well \bf{defined}: clearly specified syntax, formal semantics, adequate expressive power
-	\item \b{|Compatible} with existing (web) standards: in particular RDV	
+	\item \bf{Compatible} with existing (web) standards: in particular RDV
 \end{itemize}
 
 \subsubsection{OWL (Web Ontology Language)}
@@ -253,4 +257,4 @@ Class in OWL are \textit{unary} predicate. Slot constraint (= properties) in OWL
 \subsection{Semantic Web Resources}
 Example of popular concrete ontologies: WordNet, Schema.org, WikiData, Google Knowledge Graph, Linked Open Data
 
-(The description of each ontology don't seem very relevant for the exam)
+(The description of each ontology doesn't seem very relevant for the exam)
