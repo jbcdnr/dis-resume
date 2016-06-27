@@ -89,7 +89,7 @@ Repeat for each node, but let take $A$ w.l.o.g. (see \cref{fig:betweenness})
 
 \subsubsection{$k$-medoids for cluster extraction}
 
-We can use $k$-medoids with arbitrary chosen starting centers and a given distance function (weight on the edges for instance). Should start with multiple starting point to avoid being stuck in bad local optimal.
+We can use $k$-medoids with arbitrary chosen starting centers and a given distance function (weight on the edges for instance). Should start with multiple starting point to avoid being stuck in bad local optimum.
 
 \subsection{Random graphs}
 
@@ -140,7 +140,7 @@ Random rewiring of regular graph: take a recular graph and with probability $p$ 
 \subsubsection{Efficient search algorithm (Kleinberg’s model)}
 
 \begin{itemize}
-  \item Embed a graph into an $d$-dimensional grid to define a distance function ($l-2$ norm for instance)
+  \item Embed a graph into an $d$-dimensional grid to define a distance function ($l$2 norm for instance)
   \item each node is connected to $p$ of its closest neighbor (short range links) + $q$ random nodes (long range links) according to a distribution
   \[
     \P{u \leftrightarrow v} \propto \text{dist}(u,v)^{-r}
@@ -149,6 +149,6 @@ Random rewiring of regular graph: take a recular graph and with probability $p$ 
 
 Decentralized routing algorithm performs well if and only if $r=$ dimension of the space. If $r$ is too small, we go far but struggle to converge, if $r$ is too high we stay among our neighbors, hard to reach the neighborhood of the target.
 
-For $r=0$ we chose the long range links uniformly, like a random graph. there exist short paths between every pair of vertex but there is no decentralized algorithm capable finding these paths efficiently.
+For $r=0$ we chose the long range links uniformly, like a random graph. there exist short paths between every pair of vertex but there is no decentralized algorithm capable of finding these paths efficiently.
 
 \paragraph{Routing cost.} With $O(1)$ long range link $O(\log^2 n)$, and with $O(\log n)$ long range links $O(\log n)$.

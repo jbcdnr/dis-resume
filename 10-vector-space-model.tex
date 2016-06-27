@@ -24,12 +24,12 @@ If $A$ is the answer set and $R$ the relevant documents:
 
 \subsection{Text Retrieval Models}
 
-Most of the information needs and content are expressed in natural language. We will use a strongly simplified model of text called "full text" retrieval approach. This model ignores grammar and meaning of words. This simplification has proven successful. We can then extend this model with other features such as link structure ( PageRank).
+Most of the information needs and content are expressed in natural language. We will use a strongly simplified model of text called "full text" retrieval approach. This model ignores grammar and meaning of words. This simplification has proven successful. We can then extend this model with other features such as link structure (PageRank).
 
 
 \paragraph{Pre-processing}
 
-In full text retrieval each document is represented by a set of index terms. To get the index terms, we strip the text of its structure (e.g. XML) and of all the stopwords (e.g. "a", "and", etc.). We can also use stemming, where reduce a word to a word root ({connecting, connection...} reduce to connect). 
+In full text retrieval each document is represented by a set of index terms. To get the index terms, we strip the text of its structure (e.g. XML) and of all the stopwords (e.g. "a", "and", etc.). We can also use stemming, where reduce a word to its root ({connecting, connection...} reduce to connect). 
 
 \paragraph{Notation}
 \begin{itemize}
@@ -137,7 +137,7 @@ we can now compute each term weight $w_{ij}$ by
 \item partial matching allows retrieval of documents that approximate the query conditions
 \item cosine ranking formula sorts documents according to degree of similarity to the query
 \end{itemize} 
-\paragraph{drawbacks:} Assumes Independence of index terms. (not clear this is a disadvantage)
+\paragraph{Drawbacks:} Assumes Independence of index terms. (not clear this is a disadvantage)
 \subsection{User Relevance Feedback}
 
 Usually, a user doesn't know the information he need nor how to formulate the appropriate query. But he can identify relevant documents. We can use this feedback to improve our algorithm.

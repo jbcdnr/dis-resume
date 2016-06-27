@@ -38,7 +38,7 @@ The compression uses multiple features of the adjacency list:
 \item Locality (many links go to "nearby" pages)
 \item Gap encodings in sorted lists
 \end{itemize}
-Boldi and Vigna exploited these properties by sorting all URLs in lexicographical order and considering that the adjacency list of an node is very likely to be similar to one of the six previous lists.
+Boldi and Vigna exploited these properties by sorting all URLs in lexicographical order and considering that the adjacency list of a node is very likely to be similar to one of the six previous lists.
 
 \subsection{Pagerank}
 
@@ -62,7 +62,7 @@ The problem can be represented as a matrix computation. Let $\vec{p}$ be the vec
 
 \paragraph{Teleporting}
 
-To avoid getting stuck in a node without outgoing links (a "sink of rank"), we jump to a random node with probability $1-q$ at every step (introduce a "source of rank". Thus the relevance equation becomes:
+To avoid getting stuck in a node without outgoing links (a "sink of rank"), we jump to a random node with probability $1-q$ at every step (introduce a "source of rank"). Thus the relevance equation becomes:
 $P(p_i) = c(\frac{1-q}{N} + q \sum_{p_j|p_j \rightarrow p_i} \frac{P(p_j)}{C(p_j)})$, with $c \geq 1$.
 The matrix formulation is changed to $\vec{p} = c(qR\vec{p} + (1-q)E)$, with $E$ a $N$x$N$ matrix with all entries equal to $1/N$.
 

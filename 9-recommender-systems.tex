@@ -1,7 +1,7 @@
 
 \section{Recommender systems}
 
-\paragraph{Definition.} Given a user and a set of items, a recommender system is a function that helps to match users with items by ranking the items in order of decreased relevance.
+\paragraph{Definition.} Given a user and a set of items, a recommender system is a function that helps to match users with items by ranking the items in order of decreasing relevance.
 
 We can discern two paradigms for recommender systems: 
 \begin{itemize}
@@ -51,7 +51,7 @@ The following aggregation function is a weighted average using the similarity as
 
 \subsection{Item-based collaborative filtering}
 
-We use the similarity between items (and not users) to make predictions. Given a user $U$ and an item $I$ not rated by $U$, estimate the rating $r_U(I)$ by
+We use the similarity between items (and not users) to make predictions. Given a user $U$ and an item $I$ not rated by $U$, estimate the rating $r_U(I)$:
 
 \begin{enumerate}
   \item Find a set of items $N_I$ who are similar to $I$ and that have been rated by $U$
@@ -75,7 +75,7 @@ There is still the scalability problem but we can calculate all the pair-wise it
   \item Aggregate the ratings of the most similar items
 \end{enumerate}
 
-The content of a item is often noisy if input by the manufacturer and hard to compare between the items, a formalism is needed to compute the similarity.
+The content of an item is often noisy if input by the manufacturer and hard to compare between the items, a formalism is needed to compute the similarity.
 
 \paragraph{TF-IDF weights} For textual description, we can use this technique to describe a text by the set of terms that appear in their description, with their associated weight. Given $N$ the number of items and $n(t)$ the number of items having word $t$ in their description
 
@@ -98,8 +98,6 @@ To compute the TF-IDF measure, all the steps typical of information retrieval (r
 \]
 
 \paragraph{Problems.} Cold start, content can be limited or impossible to extract (multimedia), tends to recommend “more of the same”. Advantage: TF-IDF scores can be computed offline.
-
-\textbf{TODO Matrix factorization reference to later week (last?)}
 
 \subsection{Netflix Prize}
 
