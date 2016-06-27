@@ -148,7 +148,7 @@ if $C_r$ is the set of relevant documents, then the optimal query vector is
 
 Intuitively this expression gives, proportional to the frequency of the documents, positive weights to document vectors in the set of relevant documents and negative weights to the others. In practice we don't know $C_r$ however with the user feedback we can approximate it by:
 
-\[ \vec{q}_{approx} = \alpha\vec{q} + \frac{\beta}{|D_r|}\sum_{\vec{d_j} \in D_r} \vec{d_j} - \frac{\gamma}{\abs{R\symbol{92}D_r}} \sum_{\vec{d_j} \in D_r} \vec{d_j} \]
+\[ \vec{q}_{approx} = \alpha\vec{q} + \frac{\beta}{|D_r|}\sum_{\vec{d_j} \in D_r} \vec{d_j} - \frac{\gamma}{\abs{R\symbol{92}D_r}} \sum_{\vec{d_j} \notin D_r} \vec{d_j} \]
 
 Where $D_r$ are the documents identified as relevant by the user, from some result set $R$ of a retrieval query $q$.
 
