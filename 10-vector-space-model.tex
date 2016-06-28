@@ -38,7 +38,7 @@ In full text retrieval each document is represented by a set of index terms. To 
 \item \textit{index term:} a semantic unit, a word, short phrase, or potentially root of a word.
 \item \textit{Database DB:} collection of $n$ documents $d_j \in DB, j=1,..,n$.
 \item \textit{Vocabulary T:} collection of $m$ index terms $k_i \in T, i=1,...,m$.
-\item \textit{weight}: The importance of an index term $k_i$ for the meaning of a document $d_j$ is represented by a weight $w_{ij} \in [0,1]$; we write $d_j = (w_{1j},...,w_{mj})$
+\item \textit{weight}: The importance of an index term $k_i$ for the meaning of a document $d_j$ is represented by weights $w_{ij} \in [0,1]$; we write $d_j = (w_{1j},...,w_{mj})$
 \end{itemize}
 
 \subsubsection{Boolean retrieval}
@@ -47,12 +47,14 @@ The user specifies which terms should be present in the documents. This retrieva
 Retrieval language:
 \[ expr ::= term|(expr)|\neg expr|expr\land expr|expr \lor expr 
 \]
-with weights $w_{ij} = 1\text{ if }k_i \in d_j$ and $0$ otherwise.
+
+
 \paragraph{"Similarity" Computation in Boolean Retrieval}
 
 To compute the similarity of a document $d$ with a query $q$, we proceed in three steps
 \begin{enumerate}
-\item we determine the disjunctive normal form ( a disjunction of conjunctions) of $q$ using De Morgan's law ( $\neg( A \land B )= \neg A \lor \neg B$ ). Thus $q = ct_1 \lor ... \lor ct_l$ where $ct= \underline{k_1} \land ... \land \underline{k_m}$, $\underline{k_i} \in \{k_i, \neg k_i\}$.
+\item For each document $d_j$ we create the weight vector by assigning $w_{ij}=1$ if $k_i$ appears in $d_j$, $0$ otherwise.
+\item We determine the disjunctive normal form ( a disjunction of conjunctions) of $q$ using De Morgan's law ( $\neg( A \land B )= \neg A \lor \neg B$ ). Thus $q = ct_1 \lor ... \lor ct_l$ where $ct= \underline{k_1} \land ... \land \underline{k_m}$, $\underline{k_i} \in \{k_i, \neg k_i\}$.
 \item For each conjunctive term $ct$ create its weight vector $vec(ct)$ where $vec(ct)=(w_1,...,w_m)$ and 
 \begin{equation*}
 w_i = \begin{cases}
