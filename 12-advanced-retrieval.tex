@@ -127,7 +127,7 @@ This model is resistant to large outliers.
 \end{align*}
 
 Define a loss function
-$$ J(\theta) = \log \sigma(v_c \cdot v_w) - \sum^K_{k=1} \log \sigma(v_{c_k} \cdot v_w)
+$$ J(\theta) = -\log \sigma(v_c \cdot v_w) - \sum^K_{k=1} \log \sigma(v_{c_k} \cdot v_w)
 $$
 to transform the maximation problem into a minimization problem. Then $\theta$ can be determined using gradient descent, i.e. for every $(w,c) \in D$
 $$ \theta^{new} = \theta^{old} - \alpha \nabla_\theta J_t(\theta)

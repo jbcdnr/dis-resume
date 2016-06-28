@@ -24,12 +24,12 @@ If $A$ is the answer set and $R$ the relevant documents:
 
 \subsection{Text Retrieval Models}
 
-Most of the information needs and content are expressed in natural language. We will use a strongly simplified model of text called "full text" retrieval approach. This model ignores grammar and meaning of words. This simplification has proven successful. We can then extend this model with other features such as link structure ( PageRank).
+Most of the information needs and content are expressed in natural language. We will use a strongly simplified model of text called "full text" retrieval approach. This model ignores grammar and meaning of words. This simplification has proven successful. We can then extend this model with other features such as link structure (PageRank).
 
 
 \paragraph{Pre-processing}
 
-In full text retrieval each document is represented by a set of index terms. To get the index terms, we strip the text of its structure (e.g. XML) and of all the stopwords (e.g. "a", "and", etc.). We can also use stemming, where reduce a word to a word root ({connecting, connection...} reduce to connect). 
+In full text retrieval each document is represented by a set of index terms. To get the index terms, we strip the text of its structure (e.g. XML) and of all the stopwords (e.g. "a", "and", etc.). We can also use stemming, where reduce a word to its root ({connecting, connection...} reduce to connect). 
 
 \paragraph{Notation}
 \begin{itemize}
@@ -38,7 +38,7 @@ In full text retrieval each document is represented by a set of index terms. To 
 \item \textit{index term:} a semantic unit, a word, short phrase, or potentially root of a word.
 \item \textit{Database DB:} collection of $n$ documents $d_j \in DB, j=1,..,n$.
 \item \textit{Vocabulary T:} collection of $m$ index terms $k_i \in T, i=1,...,m$.
-\item \textit{weight}: The importance of an index term $k_i$ for the meaning of a document $d_j$ is represented by a weight $w_{ij} \in [0,1]$; we write $d_j = (w_{1j},...,w_{mj})$
+\item \textit{weight}: The importance of an index term $k_i$ for the meaning of a document $d_j$ is represented by weights $w_{ij} \in [0,1]$; we write $d_j = (w_{1j},...,w_{mj})$
 \end{itemize}
 
 \subsubsection{Boolean retrieval}
@@ -47,12 +47,14 @@ The user specifies which terms should be present in the documents. This retrieva
 Retrieval language:
 \[ expr ::= term|(expr)|\neg expr|expr\land expr|expr \lor expr 
 \]
-with weights $w_{ij} = 1\text{ if }k_i \in d_j$ and $0$ otherwise.
+
+
 \paragraph{"Similarity" Computation in Boolean Retrieval}
 
 To compute the similarity of a document $d$ with a query $q$, we proceed in three steps
 \begin{enumerate}
-\item we determine the disjunctive normal form ( a disjunction of conjunctions) of $q$ using De Morgan's law ( $\neg( A \land B )= \neg A \lor \neg B$ ). Thus $q = ct_1 \lor ... \lor ct_l$ where $ct= \underline{k_1} \land ... \land \underline{k_m}$, $\underline{k_i} \in \{k_i, \neg k_i\}$.
+\item For each document $d_j$ we create the weight vector by assigning $w_{ij}=1$ if $k_i$ appears in $d_j$, $0$ otherwise.
+\item We determine the disjunctive normal form ( a disjunction of conjunctions) of $q$ using De Morgan's law ( $\neg( A \land B )= \neg A \lor \neg B$ ). Thus $q = ct_1 \lor ... \lor ct_l$ where $ct= \underline{k_1} \land ... \land \underline{k_m}$, $\underline{k_i} \in \{k_i, \neg k_i\}$.
 \item For each conjunctive term $ct$ create its weight vector $vec(ct)$ where $vec(ct)=(w_1,...,w_m)$ and 
 \begin{equation*}
 w_i = \begin{cases}
@@ -137,7 +139,7 @@ we can now compute each term weight $w_{ij}$ by
 \item partial matching allows retrieval of documents that approximate the query conditions
 \item cosine ranking formula sorts documents according to degree of similarity to the query
 \end{itemize} 
-\paragraph{drawbacks:} Assumes Independence of index terms. (not clear this is a disadvantage)
+\paragraph{Drawbacks:} Assumes Independence of index terms. (not clear this is a disadvantage)
 \subsection{User Relevance Feedback}
 
 Usually, a user doesn't know the information he need nor how to formulate the appropriate query. But he can identify relevant documents. We can use this feedback to improve our algorithm.
@@ -148,7 +150,7 @@ if $C_r$ is the set of relevant documents, then the optimal query vector is
 
 Intuitively this expression gives, proportional to the frequency of the documents, positive weights to document vectors in the set of relevant documents and negative weights to the others. In practice we don't know $C_r$ however with the user feedback we can approximate it by:
 
-\[ \vec{q}_{approx} = \alpha\vec{q} + \frac{\beta}{|D_r|}\sum_{\vec{d_j} \in D_r} \vec{d_j} - \frac{\gamma}{\abs{R\symbol{92}D_r}} \sum_{\vec{d_j} \in D_r} \vec{d_j} \]
+\[ \vec{q}_{approx} = \alpha\vec{q} + \frac{\beta}{|D_r|}\sum_{\vec{d_j} \in D_r} \vec{d_j} - \frac{\gamma}{\abs{R\symbol{92}D_r}} \sum_{\vec{d_j} \notin D_r} \vec{d_j} \]
 
 Where $D_r$ are the documents identified as relevant by the user, from some result set $R$ of a retrieval query $q$.
 
