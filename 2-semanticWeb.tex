@@ -10,7 +10,7 @@
 
 \subsubsection{Schema-less Data}
 
-\paragraph{benefit:}
+\paragraph{Benefit:}
 
 \begin{itemize}
 \item increased flexibility: dynamically adding or dropping structural elements such as attribute
@@ -84,7 +84,7 @@ RDF consists of two part:
 RDF statement can be represented as a:
 \begin{itemize}
 \item Statement where the subject is an URI (uniform resource identifier) and object is a URI or string
-\item Directed graph: the subject and object are represented as nodes (ellipses fror resources and rectangles for literal and predicate as directed link)
+\item Directed graph: the subject and object are represented as nodes (ellipses for resources and rectangles for literal and predicate as directed link)
 \item XML Documents: encoded into XML
 \end{itemize}
 
@@ -103,10 +103,10 @@ RDF statement can be represented as a:
 \includegraphics[width=1\linewidth]{figures/type.png}
 \includegraphics[width= 1\linewidth]{figures/abbr.png}
 \end{center}
-\caption{\textit{top:}RDF syntax with type \textit{down:}abbreviated syntax}
+\caption{\textit{top:}RDF syntax with type, \textit{down:}abbreviated syntax}
 \end{figure}
 
-\paragraph{RDF complex value:} sometimes a property may be a complex statement. In order to represent such complex value anew intermediate resource is created to which different properties are associated
+\paragraph{RDF complex value:} sometimes a property may be a complex statement. In order to represent such complex value, a new intermediate resource is created to which different properties are associated
 
 \begin{figure}[H]
 \begin{center}
@@ -115,7 +115,7 @@ RDF statement can be represented as a:
 \caption{Example of a RDF complex value}
 \end{figure}
 
-\paragraph{RDF containers}statement can be made not only using single resources but  as well using collections of resources. Container are special resoruces of one or three container types that are specified in the RDF standard:
+\paragraph{RDF containers}statement can be made not only using single resources but  as well using collections of resources. Container are special resources of one or three container types that are specified in the RDF standard:
 
 \begin{itemize}
 \item Bag: unordered multi-set (= sets with multiple occurrence of the same resources)
@@ -148,7 +148,7 @@ use rdf:about = ``\#\dots'' e.g. rdf:ID=``12345'' = rdf:about = ``\#12345''
 
 \paragraph{Classes} are represented themselves as resources, which are of type \bf{rdfs:Class}. The \textit{rdf:type} is then used to indicate the type of a class resource. between classes a subclass relationship can be specified by using \bf{rdfs:subclass}
 
-In RDF everything is a resource. In particular $classes$ are sets of $resourves$ and thus \textit{rdfs:Class} is a subclass of \textit{rdfs:Resource}. But since \textit{rdfs:Resource} is a class, it is connected via the \textit{rdf:Type} to the \textit{rdf:Class} resource. This produce a cyclic structure (see Figure \ref{fig:class})
+In RDF everything is a resource. In particular $classes$ are sets of $resources$ and thus \textit{rdfs:Class} is a subclass of \textit{rdfs:Resource}. But since \textit{rdfs:Resource} is a class, it is connected via the \textit{rdf:Type} to the \textit{rdf:Class} resource. This produce a cyclic structure (see Figure \ref{fig:class})
 
 \begin{figure}[H]
 \begin{center}
@@ -158,7 +158,7 @@ In RDF everything is a resource. In particular $classes$ are sets of $resourves$
 \label{fig:class}
 \end{figure}
 
-\paragraph{Properties:} it is possible to constrain the usage of RDF properties that connect resources as follows: by connecting the property resource through the property \textit{rdfs:domain} to a class resource, one specifies that the subject when using this property must by of the type of this class. We can also constrain the range using \textit{rdfs:range}
+\paragraph{Properties:} it is possible to constrain the usage of RDF properties that connect resources as follows: by connecting the property resource through the property \textit{rdfs:domain} to a class resource, one specifies that the subject when using this property must be of the type of this class. We can also constrain the range using \textit{rdfs:range}
 
 \begin{figure}[H]
 \begin{center}

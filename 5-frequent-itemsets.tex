@@ -43,6 +43,7 @@ Example: (x is 19-25 y.o. and x buys chips) becomes (x is a customer, who is 19-
 
 \subsection{Scoring function}
 Support: $P[\{Body, Head\}]$ (The rule can be applied often)
+
 Confidence: $P[\{Head\} | \{Body\}]$ (The rule means something)
 
 \subsection{Optimization and search}
@@ -89,7 +90,7 @@ The Apriori algorithm is therefore the succession of the JOIN, PRUNE and Final s
 \subsubsection{Pertinent rules}
 Once the frequent itemsets are computed, we compute the pertinent rules as follows:
 \begin{itemize}
-\item Given a frequent itemset $J$, a candidate rule is $A \implies J/A$, for all $A \subseteq J$. (Recall that an association rule $A \implies B$ is such that $A \cup B$ is a frequent itemset and $A$ and $B$ are disjoint).
+\item Given a frequent itemset $J$, a candidate rule is $A \implies J \setminus A$, for all $A \subseteq J$. (Recall that an association rule $A \implies B$ is such that $A \cup B$ is a frequent itemset and $A$ and $B$ are disjoint).
 \item The rule has enough support (frequent itemsets were defined to satisfy this), it also needs good confidence. Confidence is $\frac{s(J/A \cup A)}{s(A)} = \frac{s(J)}{s(A)}$.
 \item As $J$ is a frequent itemset, so is $A$ and both support counts are available from the Apriori algorithm, so the computation is straightforward
 \end{itemize}

@@ -68,27 +68,27 @@ There exists other methods which do not suffer from these issues:
 \begin{itemize}
 	\item said \textbf{supervised} since it is based on existing data
 	\item useful in decision problems, where for a given data item a decision is to be made
-	\item the model is a function that return the class label fiven the remaining attributes of an unknown object
+	\item the model is a function that return the class label given the remaining attributes of an unknown object
 	\item the classes are known
 \end{itemize}
 
 A good model classifies accurately the items in the training set and generalises well for the unknown items in the test set.
 
 \subsubsection*{Decision tree}
-In a decision tree, at each level, one of the existing attributes is used to partition the data set based on the attribute value. In such a tree, leaves represent the calues of the class label.
+In a decision tree, at each level, one of the existing attributes is used to partition the data set based on the attribute value. In such a tree, leaves represent the values of the class label.
 
-Generally a decision tree is constructed in a top-down manner by recursively splitting the training set using conditions on the attributes. First, all data objects are assign to the root and, based on selected attributes, objects are partitioned. The recursion stops when all samples belong to the same class or if there is no attributes left. In a second phase, we remove leaves correpsonding to outliers.
+Generally a decision tree is constructed in a top-down manner by recursively splitting the training set using conditions on the attributes. First, all data objects are assign to the root and, based on selected attributes, objects are partitioned. The recursion stops when all samples belong to the same class or if there is no attributes left. In a second phase, we remove leaves corresponding to outliers.
 
-The attribute selection is based on the amount of entropy in the set S ar a given branch in the tree, defined by:
+The attribute selection is based on the amount of entropy in the set $S$ at a given branch in the tree, defined by:
 \begin{align*}
 	H(P, N) = - \frac{P}{P + N} \log_2 \frac{P}{P + N} - \frac{N}{P + N} \log_2 \frac{N}{P + N} 
 \end{align*}
-with $P$ and $N$ the number of positive and negative samples respectively. The mount of information needed to classify the data after the split according to attribute $A$ is obtained by calculating $H(p,n)$ for each of the partitions and weightting these values by the probability that a data item belongs to the respective partition.
+with $P$ and $N$ the number of positive and negative samples respectively. The amount of information needed to classify the data after the split according to attribute $A$ is obtained by calculating $H(P,N)$ for each of the partitions and weighting these values by the probability that a data item belongs to the respective partition.
 
 \begin{align*}
 	H(A) = \sum_{i = 1}^v \frac{P_i + N_i}{P + N} H(P_i, N_i)
 \end{align*}
-with $A$ partitioning $S$ into $S_1, ..., S_v$ and $P_i$, $N_i$ the number of respectivelty positive or negative samples in $S_i$.
+with $A$ partitioning $S$ into $S_1, ..., S_v$ and $P_i$, $N_i$ the number of respectively positive or negative samples in $S_i$.
 
 The information gained (reduction of uncertainty) by a split is given by
 
