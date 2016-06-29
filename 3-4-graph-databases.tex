@@ -32,7 +32,8 @@ We have to extend the concept of simulation relationship for the graph data mode
   \item A schema graph S is a schema for a data graph D if there exists a rooted, typed simulation of D using S (that may contain wildcards and alternate labels). We require that root and leaf nodes in the data graph are related to root and leaf nodes in the schema graph. 
   \item Rooted simulation: R(r$_{1}$, r$_{2}$) for the roots r$_{1}$ and r$_{2}$  
   \item Typed simulation: for all x, y if R(x, y) and y is an atomic type then x must be an atomic node with content of that type
-  \item For wildcards and alternate labels the label in the data graph has to be contained in the set of labels specified by these extended schema edge labels: if x$_{1}\rightarrow_{l}$ y$_{1}$ then x$_{2}\rightarrow_{l}$ y$_{2}$ or x$_{2}\rightarrow_{\_}$ y$_{2}$ or x$_{2}\rightarrow_{l|k|...}$ y$_{2}$
+  \item For wildcards and alternate labels the label in the data graph has to be contained in the set of labels specified by these extended schema edge labels: if x$_{1}\rightarrow_{l}$ y$_{1}$ then x$_{2}\rightarrow_{l}$ y$_{2}$ or x$_{2}\rightarrow_{\_}$ y$_{2}$ or x$_{2}\rightarrow_{l|k|...}$ y$_{2}$.  We require that the type of a data value stored in the data graph stores to the type label of the node in the schema graph this node is related to.
+
 
 \end{itemize}
 
@@ -74,7 +75,7 @@ The resulting schema graph should be:
 It is called a \textbf{data guide}. Data guide nodes correspond to subsets of data graph nodes. Its root node is the set containing the data graph root. 
 
 \paragraph{Data Guide Construction}
-For each data guide node constructed and for each edge label of an  edge leaving in the data graph some element from the data guide node:
+For each data guide node constructed and for each label of an  edge leaving in the data graph some element from the data guide node:
 \begin{itemize}
 \item form the set of nodes in the data graph reached by this edge label
 \item if the set exists already in the data guide, create a labeled edge to it
