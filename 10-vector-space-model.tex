@@ -87,7 +87,7 @@ Intuitively,
 \underline{Disjunctive normal form of query:} \\ \renewcommand{\arraystretch}{1}
  \specialcell[t]{$("application" \land "algorithm" \land "theory") \lor $\\$
 ("application" \land "algorithm" \land \neg "theory") \lor $\\$
-("application" \land \neg "algorithm" \land "theory")$} \\
+("application" \land \neg "algorithm" \land \neg "theory")$} \\
 \underline{Query weight vectors:} \\ $q= \{(1,1,1,0),(1,1,-1,0),(1,-1,-1,0)\}$\\
 \underline{Documents:} \\
  \renewcommand{\arraystretch}{1}
@@ -125,13 +125,15 @@ where $\abs{v} = \sqrt{\sum_{i=1}^m v_i^2}$.
 
 \[tf(i,j) = \frac{freq(i,j)}{\text{max}_{k \in T}freq(k,j)}\]
 
-\textit{Inverse Document Frequency} considers how frequent a term is in the document collection of size $n$ (measure for distinctiveness). It can be interpreted as the amount of information associated with term $k_i$
+\textit{Inverse Document Frequency} considers how frequent a term is in the document collection of size $n$ (measure for distinctiveness). Where $n_i$ is the number of documents in which the therm $k_i$ appears. It can be interpreted as the amount of information associated with term $k_i$
 
 \[idf(i)= \log(\frac{n}{n_i}) \in [0,\log(n)]\]
 
 we can now compute each term weight $w_{ij}$ by
 \[w_{ij} = tf(i,j)idf(i) = \frac{freq(i,j)}{\text{max}_{k \in T}freq(k,j)} \log(\frac{n}{n_i})\]
 
+To compute the weights of the query vector $q$, we also compute the tf-idf of the query. 
+\[w_{iq} = tf(i,q)idf(i)\]
 
 \paragraph{Advantages:}
 \begin{itemize}

@@ -88,7 +88,7 @@ The base set contains a "root set" of pages, which match the search criterion, a
 
 \subsubsection{The algorithm}
 
-The algorithm computes a hub score and an authority score for each page, both initialized to zero. Then at each iteration, the scores are updated as follows:
+The algorithm computes a hub score and an authority score for each page, both initialized to one. Then at each iteration, the scores are updated as follows:
 \begin{itemize}
 \item The hub score becomes the sum of all authority scores for the pages pointed to by the page.
 \item The authority score becomes the sum of all hub scores for the pages that point to the page.
